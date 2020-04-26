@@ -1,4 +1,4 @@
-name: video_editor_example
+name: tapioca_example
 description: Demonstrates how to use the video_editor plugin.
 publish_to: 'none'
 
@@ -12,12 +12,13 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
+  image_picker: ^0.6.5+2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  video_editor:
+  tapioca:
     path: ../
 
 # For information on the generic Dart part of this file, see the
@@ -25,12 +26,12 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
-
+  assets:
+    - assets/
   # To add assets to your application, add an assets section, like this:
   # assets:
   #  - images/a_dot_burr.jpeg

@@ -41,4 +41,5 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.github.MasayukiSuda:Mp4Composer-android:v0.3.9'
 }

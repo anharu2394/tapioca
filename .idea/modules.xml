@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/video_editor.iml" filepath="$PROJECT_DIR$/video_editor.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tapioca.iml" filepath="$PROJECT_DIR$/tapioca.iml" />
       <module fileurl="file://$PROJECT_DIR$/android/video_editor_android.iml" filepath="$PROJECT_DIR$/android/video_editor_android.iml" />
       <module fileurl="file://$PROJECT_DIR$/example/android/video_editor_example_android.iml" filepath="$PROJECT_DIR$/example/android/video_editor_example_android.iml" />
     </modules>

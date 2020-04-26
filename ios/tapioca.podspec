@@ -3,7 +3,7 @@
 # Run `pod lib lint video_editor.podspec' to validate before publishing.
 #
 Pod::Spec.new do |s|
-  s.name             = 'video_editor'
+  s.name             = 'tapioca'
   s.version          = '0.0.1'
   s.summary          = 'A new Flutter plugin.'
   s.description      = <<-DESC

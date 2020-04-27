@@ -1,23 +1,31 @@
 import "dart:typed_data";
 import "dart:ui";
 
+/// TapiocaBall is a effect to apply to the video.
 abstract class TapiocaBall {
+  /// Creates a object to apply color filter.
   static TapiocaBall filter(Filters filter) {
     return _Filter(filter);
   }
 
+  /// Creates a object to overlay text.
   static TapiocaBall textOverlay(String text, int x, int y, int size, Color color) {
     return _TextOverlay(text, x, y, size, color);
   }
 
+  /// Creates a object to overlay a image.
   static TapiocaBall imageOverlay(Uint8List bitmap, int x, int y) {
     return _ImageOverlay(bitmap, x, y);
   }
 
+  /// Returns a [Map<String, dynamic>] representation of this object.
   Map<String, dynamic> toMap();
+
+  /// Returns a TapiocaBall type name.
   String toTypeName();
 }
 
+/// Enum that specifies the color filter type.
 enum Filters {
   pink
 }

@@ -1,8 +1,5 @@
 import 'dart:async';
-import 'dart:io';
-
 import 'package:flutter/services.dart';
-import 'tapioca_ball.dart';
 
 class VideoEditor {
   static const MethodChannel _channel =

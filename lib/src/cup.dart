@@ -14,8 +14,8 @@ class Cup {
   Cup(this.content, this.tapiocaBalls);
 
   /// Edit the video based on the [tapiocaBalls](list of processing)
-  Future suckUp() {
+  Future suckUp(String destFilePath) {
     final Map<String, Map<String, dynamic>> processing = Map.fromIterable(tapiocaBalls, key: (v) => v.toTypeName(), value: (v) => v.toMap());
-    VideoEditor.writeVideofile(content.name, processing);
+    return VideoEditor.writeVideofile(content.name, destFilePath, processing);
   }
 }

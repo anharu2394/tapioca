@@ -4,11 +4,11 @@ import Photos
 import Flutter
 
 public protocol VideoGeneratorServiceInterface {
-  func writeVideofile(srcPath:String, processing: [String: [String:Any]], result: @escaping FlutterResult)
+  func writeVideofile(srcPath:String, destPath:String, processing: [String: [String:Any]], result: @escaping FlutterResult)
 }
 
 public class VideoGeneratorService: VideoGeneratorServiceInterface {
-  public func writeVideofile(srcPath:String, processing: [String: [String:Any]], result: @escaping FlutterResult) {
+  public func writeVideofile(srcPath:String, destPath:String, processing: [String: [String:Any]], result: @escaping FlutterResult) {
     let fileURL = URL(fileURLWithPath: srcPath)
 
     let composition = AVMutableComposition()
@@ -60,17 +60,16 @@ public class VideoGeneratorService: VideoGeneratorServiceInterface {
       for (key, value) in processing  {
         switch key {
           case "Filter":
-          guard let type = value["type"] as? NSNumber else {
+          guard let type = value["type"] as? String else {
             print("not found value")
             result(FlutterError(code: "processing_data_invalid",
               message: "one Filter member is not found.",
               details: nil))
             return
           }
-          let colorList: [String] = ["ffc0cb"]
           let filter = Filter(type: type)
           let layer = CALayer()
-          layer.backgroundColor = UIColor(hex:colorList[filter.type.intValue]).cgColor
+          layer.backgroundColor = UIColor(hex:filter.type.replacingOccurrences(of: "#", with: "")).cgColor
           layer.opacity = 0.5
           layer.frame = CGRect(x: 0, y: 0, width: size.width, height: size.height)
           filters.append(layer)
@@ -89,7 +88,7 @@ public class VideoGeneratorService: VideoGeneratorServiceInterface {
           }
           let textOverlay = TextOverlay(text: text, x: x, y: y, size: textSize, color: color)
           let titleLayer = CALayer()
-          let uiImage = imageWith(name: textOverlay.text, width: size.width, height: size.width, size: textOverlay.size.intValue)
+          let uiImage = imageWith(name: textOverlay.text, width: size.width, height: size.width, size: textOverlay.size.intValue, color: UIColor(hex:textOverlay.color.replacingOccurrences(of: "#", with: "")))
           titleLayer.contents = uiImage?.cgImage
           print(uiImage?.size)
           titleLayer.frame = CGRect(x: CGFloat(textOverlay.x.intValue), y: size.height - CGFloat(textOverlay.y.intValue) - uiImage!.size.height,
@@ -148,11 +147,8 @@ public class VideoGeneratorService: VideoGeneratorServiceInterface {
       instruction.layerInstructions = [layerinstruction]
       layercomposition.instructions = [instruction]
 
-
-      let dirPaths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-      let docsDir = URL(fileURLWithPath: dirPaths[0])
-      let movieFilePath = docsDir.appendingPathComponent("result.mp4")
-      let movieDestinationUrl = URL(fileURLWithPath: movieFilePath.path)
+      let movieFilePath = destPath
+      let movieDestinationUrl = URL(fileURLWithPath: movieFilePath)
       print(movieDestinationUrl)
       guard let assetExport = AVAssetExportSession(asset: composition, presetName:AVAssetExportPresetHighestQuality) else {
         print("assertExport error")
@@ -167,11 +163,6 @@ public class VideoGeneratorService: VideoGeneratorServiceInterface {
       do { // delete old video
         try FileManager.default.removeItem(at: movieDestinationUrl)
         } catch {
-          result(FlutterError(code: "video_processing_failed",
-            message: "video processing is failed.",
-            details: nil))
-          print(error.localizedDescription)
-          return
         }
 
         assetExport.outputURL = movieDestinationUrl
@@ -183,19 +174,17 @@ public class VideoGeneratorService: VideoGeneratorServiceInterface {
            print("cancelled \(assetExport.error)")
            default:
            print("Movie complete")
-           PHPhotoLibrary.shared().performChanges({
-            PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: movieDestinationUrl)
-            })
+           result(nil)
 
          }
          })
       }
-      private func imageWith(name: String, width: CGFloat, height: CGFloat, size: Int) -> UIImage? {
+      private func imageWith(name: String, width: CGFloat, height: CGFloat, size: Int, color: UIColor) -> UIImage? {
         let frame = CGRect(x: 0, y: 0, width: width, height: CGFloat(size))
         let nameLabel = UILabel(frame: frame)
         nameLabel.textAlignment = .left
         nameLabel.backgroundColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0)
-        nameLabel.textColor = .white
+        nameLabel.textColor = color
         nameLabel.font = UIFont.boldSystemFont(ofSize: CGFloat(size))
         nameLabel.text = name
         nameLabel.numberOfLines = 0
@@ -221,7 +210,7 @@ public class VideoGeneratorService: VideoGeneratorServiceInterface {
   }
 
   struct Filter {
-    let type: NSNumber
+    let type: String
 
   }
 

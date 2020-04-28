@@ -34,15 +34,19 @@ Ensure the following permission is present in your Android Manifest file, locate
 
 ```dart
 import 'package:tapioca/tapioca.dart';
+import 'package:path_provider/path_provider.dart';
 
 final tapiocaBalls = [
     TapiocaBall.filter(Filters.pink),
     TapiocaBall.imageOverlay(imageBitmap, 300, 300),
     TapiocaBall.textOverlay("text",100,10,100,Color(0xffffc0cb)),
 ];
-
+var tempDir = await getTemporaryDirectory();
+inal path = '${tempDir.path}/result.mp4';
 final cup = Cup(Content(videoPath), tapiocaBalls);
-cup.suckUp();
+cup.suckUp(path).then((_) {
+  print("finish processing");
+});
 ```
 
 ### TapiocaBall

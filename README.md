@@ -17,14 +17,8 @@ First, add `tapioca` as a [dependency in your pubspec.yaml file.](https://flutte
 
 Add the following entry to your _Info.plist_ file, located in `<project root>/ios/Runner/Info.plist`:
 
-```xml
-<key>NSCameraUsageDescription</key>
-<string>Used to demonstrate image picker plugin</string>
-<key>NSMicrophoneUsageDescription</key>
-<string>Used to capture audio for image picker plugin</string>
-<key>NSPhotoLibraryUsageDescription</key>
-<string>Used to demonstrate image picker plugin</string>
-```
+- NSPhotoLibraryUsageDescription - Specifies the reason for your app to access the user’s photo library. This is called `Privacy - Photo Library Usage Description` in the visual editor.
+- NSPhotoLibraryAddUsageDescription - Specifies the reason for your app to get write-only access to the user’s photo library. This is called `Privacy - Photo Library Additions Usage Description` in the visual editor.
 
 
 ### Android

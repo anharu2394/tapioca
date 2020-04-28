@@ -1,8 +1,8 @@
 name: tapioca
-description: A new Flutter plugin.
-version: 0.0.1
-author:
-homepage:
+description: Tapioca is a Flutter plugin for video editing on Android and iOS.
+version: 1.0.0
+author: Anharu
+homepage: https://github.com/anharu2394/tapioca
 
 environment:
   sdk: ">=2.1.0 <3.0.0"

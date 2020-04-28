@@ -3,7 +3,7 @@
 import android.graphics.Bitmap
 
 data class Filter(val map: Map<String, Any>) {
-    val type: Int    by map
+    val type: String    by map
 }
 
 data class ImageOverlay(val map: Map<String, Any>) {

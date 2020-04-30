@@ -12,6 +12,7 @@ import me.anharu.video_editor.ImageOverlay
 import io.flutter.plugin.common.MethodChannel.Result
 import android.graphics.Paint.Align
 import android.graphics.Paint.ANTI_ALIAS_FLAG
+import com.daasuu.mp4compose.VideoFormatMimeType
 import me.anharu.video_editor.filter.GlColorBlendFilter
 import me.anharu.video_editor.filter.GlTextOverlayFilter
 
@@ -50,6 +51,7 @@ class VideoGeneratorService(
             })
         }
         composer.filter(GlFilterGroup( filters))
+                .videoFormatMimeType(VideoFormatMimeType.HEVC)
                 .listener(object : Mp4Composer.Listener {
                     override fun onProgress(progress: Double) {
                         println("onProgress = " + progress)

@@ -42,7 +42,7 @@ final tapiocaBalls = [
     TapiocaBall.textOverlay("text",100,10,100,Color(0xffffc0cb)),
 ];
 var tempDir = await getTemporaryDirectory();
-inal path = '${tempDir.path}/result.mp4';
+final path = '${tempDir.path}/result.mp4';
 final cup = Cup(Content(videoPath), tapiocaBalls);
 cup.suckUp(path).then((_) {
   print("finish processing");

@@ -16,13 +16,13 @@ dependencies:
   path_provider: ^1.6.7
   gallery_saver: ^2.0.1
   video_player: ^0.10.9+1
+  tapioca:
+    path: ../
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  tapioca:
-    path: ../
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

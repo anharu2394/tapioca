@@ -12,19 +12,22 @@ import me.anharu.video_editor.ImageOverlay
 import io.flutter.plugin.common.MethodChannel.Result
 import android.graphics.Paint.Align
 import android.graphics.Paint.ANTI_ALIAS_FLAG
+import android.util.EventLog
 import com.daasuu.mp4compose.VideoFormatMimeType
+import io.flutter.plugin.common.EventChannel
 import me.anharu.video_editor.filter.GlColorBlendFilter
 import me.anharu.video_editor.filter.GlTextOverlayFilter
+import java.util.logging.StreamHandler
 
 
 interface VideoGeneratorServiceInterface {
-    fun writeVideofile(processing: HashMap<String,HashMap<String,Any>>, result: Result, activity: Activity);
+    fun writeVideofile(processing: HashMap<String,HashMap<String,Any>>, result: Result, activity: Activity, eventSink: EventChannel.EventSink);
 }
 
 class VideoGeneratorService(
         private val composer: Mp4Composer
 ) : VideoGeneratorServiceInterface {
-    override fun writeVideofile(processing: HashMap<String,HashMap<String,Any>>, result: Result, activity: Activity ) {
+    override fun writeVideofile(processing: HashMap<String,HashMap<String,Any>>, result: Result, activity: Activity, eventSink: EventChannel.EventSink ) {
         val filters: MutableList<GlFilter> = mutableListOf()
         try {
             processing.forEach { (k, v) ->
@@ -55,6 +58,9 @@ class VideoGeneratorService(
                 .listener(object : Mp4Composer.Listener {
                     override fun onProgress(progress: Double) {
                         println("onProgress = " + progress)
+                        activity.runOnUiThread(Runnable {
+                            eventSink.success(progress)
+                        })
                     }
 
                     override fun onCompleted() {
@@ -73,6 +79,7 @@ class VideoGeneratorService(
                         println(exception);
                         activity.runOnUiThread(Runnable {
                             result.error("video_processing_failed", "video processing is failed.", null)
+
                         })
                     }
                 }).start()

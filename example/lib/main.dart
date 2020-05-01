@@ -22,6 +22,9 @@ class _MyAppState extends State<MyApp> {
   final navigatorKey = GlobalKey<NavigatorState>();
   File _video;
   bool isLoading = false;
+  static const EventChannel _eventChannel =
+      const EventChannel('video_editor_progress');
+  double progress = 0;
 
   @override
   void initState() {
@@ -50,7 +53,6 @@ class _MyAppState extends State<MyApp> {
   }
 
   _pickVideo() async {
-
     try {
       File video = await ImagePicker.pickVideo(source: ImageSource.gallery);
       print(video.path);

@@ -30,7 +30,7 @@ Step 1. Ensure the following permission is present in your Android Manifest file
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 ```
 
-Step 2. Add the JitPack repository to your Android build file, located in ` located in `<project root>/android/build.gradle`:
+Step 2. Add the JitPack repository to your Android build file, located in `<project root>/android/build.gradle`:
 
 ```
 allprojects {

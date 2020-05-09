@@ -16,9 +16,10 @@ class GlColorBlendFilter(filter: Filter) : GlFilter(GlFilter.DEFAULT_VERTEX_SHAD
         uniform lowp float red;
         uniform lowp float green;
         uniform lowp float blue;
+        uniform lowp float alpha;
         void main() {
            vec4 color = vec4(red,green,blue,0.1);
-           gl_FragColor = mix(texture2D(sTexture, vTextureCoord), color, 0.5);
+           gl_FragColor = mix(texture2D(sTexture, vTextureCoord), color, alpha);
        }
        """
     }
@@ -28,5 +29,6 @@ class GlColorBlendFilter(filter: Filter) : GlFilter(GlFilter.DEFAULT_VERTEX_SHAD
         GLES20.glUniform1f(getHandle("red"), Color.red(color) / 255f)
         GLES20.glUniform1f(getHandle("green"), Color.green(color)/ 255f)
         GLES20.glUniform1f(getHandle("blue"), Color.blue(color)/ 255f)
+        GLES20.glUniform1f(getHandle("alpha"), filter.degree.toFloat())
     }
 }

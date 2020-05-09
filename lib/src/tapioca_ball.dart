@@ -4,13 +4,13 @@ import "dart:ui";
 /// TapiocaBall is a effect to apply to the video.
 abstract class TapiocaBall {
   /// Creates a object to apply color filter from [Filters].
-  static TapiocaBall filter(Filters filter) {
-    return _Filter(filter);
+  static TapiocaBall filter(Filters filter, double degree) {
+    return _Filter(filter, degree);
   }
 
   /// Creates a object to apply color filter from [Color].
-  static TapiocaBall filterFromColor(Color color) {
-    return _Filter.color(color);
+  static TapiocaBall filterFromColor(Color color, double degree) {
+    return _Filter.color(color, degree);
   }
 
   /// Creates a object to overlay text.
@@ -39,7 +39,8 @@ enum Filters {
 
 class _Filter extends TapiocaBall {
  String color;
- _Filter(Filters type) {
+ double degree;
+ _Filter(Filters type, double degree) {
    switch (type) {
      case Filters.pink:
       this.color = "#ffc0cb";
@@ -50,13 +51,15 @@ class _Filter extends TapiocaBall {
      case Filters.blue:
        this.color = "#1f8eed";
    }
+   this.degree = degree;
  }
- _Filter.color(Color colorInstance) {
+ _Filter.color(Color colorInstance, double degree) {
    this.color = '#${colorInstance.value.toRadixString(16).substring(2)}';
+   this.degree = degree;
  }
 
  Map<String, dynamic> toMap() {
-   return {'type': color };
+   return {'type': color, 'degree': degree };
  }
 
  String toTypeName() {

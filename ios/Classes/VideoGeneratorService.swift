@@ -17,7 +17,7 @@ public class VideoGeneratorService: VideoGeneratorServiceInterface {
     // get video track
     let vtrack =  vidAsset.tracks(withMediaType: AVMediaType.video)
     print("eee")
-    guard let videoTrack:AVAssetTrack = vtrack[0] else {
+    guard let videoTrack: AVAssetTrack = vtrack[0] as AVAssetTrack? else {
       print("not found track")
       result(FlutterError(code: "video_processing_failed",
         message: "video track is not found.",

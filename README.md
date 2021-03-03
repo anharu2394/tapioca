@@ -4,6 +4,16 @@ Tapioca is a Flutter plugin for video editing on Android and iOS.
 
 *Note:* Feedback welcome and Pull Requests are most welcome!
 
+## Previews
+
+<table>
+    <td><img src="assets/non_filter.gif"><br>No filter</td>
+    <td><img src="assets/pink_filter.gif"><br>Apply pink filter</td>
+    <td><img src="assets/blue_filter.gif"><br>Apply blue filter</td>
+    <td><img src="assets/text_filter.gif"><br>Apply text filter</td>
+    <td><img src="assets/tapioca_filter.gif"><br>Apply image filter</td>
+</table>
+
 ## Features
 
 - Develop for iOS and Android from a single codebase
@@ -23,11 +33,23 @@ Add the following entry to your _Info.plist_ file, located in `<project root>/io
 
 ### Android
 
-Ensure the following permission is present in your Android Manifest file, located in `<project root>/android/app/src/main/AndroidManifest.xml`:
+Step 1. Ensure the following permission is present in your Android Manifest file, located in `<project root>/android/app/src/main/AndroidManifest.xml`:
 
 ```xml
 <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+```
+
+Step 2. Add the JitPack repository to your Android build file, located in `<project root>/android/build.gradle`:
+
+```
+allprojects {
+	repositories {
+		...
+		maven { url 'https://jitpack.io' }
+	}
+}
+
 ```
 
 ## Usage
@@ -77,3 +99,6 @@ You can edit the video by executing `.suckUp()`.
 - On Android, the backing video editor is [Mp4Composer-android](https://github.com/MasayukiSuda/Mp4Composer-android),
   The supported format is only MP4.
 
+## Articles
+
+- [“Tapioca”, the flutter package to edit videos easily and not using FFmpeg](https://medium.com/@anharu/tapioca-the-flutter-package-to-edit-videos-easily-and-not-using-ffmpeg-2e1a85824796)

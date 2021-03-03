@@ -4,6 +4,16 @@ Tapioca is a Flutter plugin for video editing on Android and iOS.
 
 *Note:* Feedback welcome and Pull Requests are most welcome!
 
+## Previews
+
+<table>
+    <td><img src="assets/non_filter.gif"><br>No filter</td>
+    <td><img src="assets/pink_filter.gif"><br>Apply pink filter</td>
+    <td><img src="assets/blue_filter.gif"><br>Apply blue filter</td>
+    <td><img src="assets/text_filter.gif"><br>Apply text filter</td>
+    <td><img src="assets/tapioca_filter.gif"><br>Apply image filter</td>
+</table>
+
 ## Features
 
 - Develop for iOS and Android from a single codebase

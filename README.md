@@ -99,3 +99,6 @@ You can edit the video by executing `.suckUp()`.
 - On Android, the backing video editor is [Mp4Composer-android](https://github.com/MasayukiSuda/Mp4Composer-android),
   The supported format is only MP4.
 
+## Articles
+
+- [“Tapioca”, the flutter package to edit videos easily and not using FFmpeg](https://medium.com/@anharu/tapioca-the-flutter-package-to-edit-videos-easily-and-not-using-ffmpeg-2e1a85824796)

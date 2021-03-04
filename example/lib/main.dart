@@ -73,49 +73,55 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
-        body: Center(child: isLoading ? CircularProgressIndicator() : RaisedButton(
-          child: Text("Pick a video and Edit it"),
-          color: Colors.orange,
-          textColor: Colors.white,
-          onPressed: () async {
-            print("clicked!");
-            await _pickVideo();
-            var tempDir = await getTemporaryDirectory();
-            final path = '${tempDir.path}/result.mp4';
-            print(tempDir);
-            final imageBitmap =
-                (await rootBundle.load("assets/tapioca_drink.png"))
-                    .buffer
-                    .asUint8List();
-            try {
-              final tapiocaBalls = [
-                TapiocaBall.filter(Filters.pink, 0.2),
-                TapiocaBall.imageOverlay(imageBitmap, 300, 300),
-                TapiocaBall.textOverlay(
-                    "text", 100, 10, 100, Color(0xffffc0cb)),
-              ];
-              if (_video != null) {
-                final cup = Cup(Content(_video.path), tapiocaBalls);
-                cup.suckUp(path).then((_) async {
-                  print("finished");
-                  GallerySaver.saveVideo(path).then((bool success) {
-                    print(success.toString());
-                  });
-                  navigatorKey.currentState.push(
-                    MaterialPageRoute(builder: (context) => VideoScreen(path)),
-                  );
-                  setState(() {
-                    isLoading = false;
-                  });
-                });
-              } else {
-                print("video is null");
-              }
-            } on PlatformException {
-              print("error!!!!");
-            }
-          },
-        )),
+        body: Center(
+            child: isLoading
+                ? CircularProgressIndicator()
+                : RaisedButton(
+                    child: Text("Pick a video and Edit it"),
+                    color: Colors.orange,
+                    textColor: Colors.white,
+                    onPressed: () async {
+                      print("clicked!");
+                      await _pickVideo();
+                      var tempDir = await getTemporaryDirectory();
+                      final path = '${tempDir.path}/result.mp4';
+                      print(tempDir);
+                      final imageBitmap =
+                          (await rootBundle.load("assets/tapioca_drink.png"))
+                              .buffer
+                              .asUint8List();
+                      try {
+                        final tapiocaBalls = [
+                          TapiocaBall.filter(Filters.pink, 0.2),
+                          TapiocaBall.imageOverlay(imageBitmap, 300, 300),
+                          TapiocaBall.textOverlay(
+                              "text", 40, 10, 60, Color(0xffffc0cb)),
+                          TapiocaBall.textOverlay(
+                              "text 2", 100, 40, 100, Colors.red),
+                        ];
+                        if (_video != null) {
+                          final cup = Cup(Content(_video.path), tapiocaBalls);
+                          cup.suckUp(path).then((_) async {
+                            print("finished");
+                            GallerySaver.saveVideo(path).then((bool success) {
+                              print(success.toString());
+                            });
+                            navigatorKey.currentState.push(
+                              MaterialPageRoute(
+                                  builder: (context) => VideoScreen(path)),
+                            );
+                            setState(() {
+                              isLoading = false;
+                            });
+                          });
+                        } else {
+                          print("video is null");
+                        }
+                      } on PlatformException {
+                        print("error!!!!");
+                      }
+                    },
+                  )),
       ),
     );
   }
@@ -150,6 +156,9 @@ class _VideoAppState extends State<VideoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Preview"),
+      ),
       body: Center(
         child: _controller.value.initialized
             ? AspectRatio(

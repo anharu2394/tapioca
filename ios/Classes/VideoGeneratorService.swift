@@ -58,7 +58,16 @@ public class VideoGeneratorService: VideoGeneratorServiceInterface {
       let size = videoTrack.naturalSize
       var filters  = [CALayer]()
       for (key, value) in processing  {
-        switch key {
+
+        guard let typeSelect = value["toTypeName"] as? String else {
+            print("not found value")
+            result(FlutterError(code: "processing_data_invalid",
+              message: "one Filter member is not found.",
+              details: nil))
+            return
+          }
+
+        switch typeSelect  {
           case "Filter":
           guard let type = value["type"] as? String else {
             print("not found value")

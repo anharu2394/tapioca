@@ -18,6 +18,7 @@ import io.flutter.plugin.common.EventChannel
 import me.anharu.video_editor.filter.GlColorBlendFilter
 import me.anharu.video_editor.filter.GlTextOverlayFilter
 import java.util.logging.StreamHandler
+import android.util.Log
 
 
 interface VideoGeneratorServiceInterface {
@@ -31,7 +32,10 @@ class VideoGeneratorService(
         val filters: MutableList<GlFilter> = mutableListOf()
         try {
             processing.forEach { (k, v) ->
-                when (k) {
+                val toTypeName : String  = v["toTypeName"] as String
+                println(toTypeName)
+                Log.i("TAG", toTypeName)
+                when (toTypeName) {
                     "Filter" -> {
                         val passFilter = Filter(v)
                         val filter = GlColorBlendFilter(passFilter)

@@ -76,10 +76,8 @@ class _MyAppState extends State<MyApp> {
         body: Center(
             child: isLoading
                 ? CircularProgressIndicator()
-                : RaisedButton(
+                : ElevatedButton(
                     child: Text("Pick a video and Edit it"),
-                    color: Colors.orange,
-                    textColor: Colors.white,
                     onPressed: () async {
                       print("clicked!");
                       await _pickVideo();
@@ -98,6 +96,8 @@ class _MyAppState extends State<MyApp> {
                               "text", 40, 10, 60, Color(0xffffc0cb)),
                           TapiocaBall.textOverlay(
                               "text 2", 100, 40, 100, Colors.red),
+                          TapiocaBall.textOverlay(
+                              "text 2", 110, 60, 100, Colors.green),
                         ];
                         if (_video != null) {
                           final cup = Cup(Content(_video.path), tapiocaBalls);
@@ -113,6 +113,8 @@ class _MyAppState extends State<MyApp> {
                             setState(() {
                               isLoading = false;
                             });
+                          }).catchError((onError) {
+                            print(onError.toString());
                           });
                         } else {
                           print("video is null");

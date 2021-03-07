@@ -19,15 +19,18 @@ import me.anharu.video_editor.VideoGeneratorService
 import java.io.File
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.*
+import android.util.Log
 
 
 /** VideoEditorPlugin */
-public class VideoEditorPlugin : FlutterPlugin, MethodCallHandler, PluginRegistry.RequestPermissionsResultListener, ActivityAware {
+public class VideoEditorPlugin : FlutterPlugin, ActivityAware, MethodCallHandler, PluginRegistry.RequestPermissionsResultListener {
+    
     var activity: Activity? = null
     private var methodChannel: MethodChannel? = null
-    private var eventChannel: EventChannel? = null
+
+    lateinit var eventChannel: EventChannel
     private val myPermissionCode = 34264
-    private var eventSink : EventChannel.EventSink? = null
+    private val streamHandler = ResultStreamHandler()
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         onAttachedToEngine(flutterPluginBinding.binaryMessenger)
@@ -35,17 +38,8 @@ public class VideoEditorPlugin : FlutterPlugin, MethodCallHandler, PluginRegistr
 
     fun onAttachedToEngine(messenger: BinaryMessenger) {
         methodChannel = MethodChannel(messenger, "video_editor")
-        eventChannel = EventChannel(messenger, "video_editor_progress")
         methodChannel?.setMethodCallHandler(this)
-        eventChannel?.setStreamHandler(object : EventChannel.StreamHandler {
-            override fun onListen(arguments: Any?, events: EventChannel.EventSink) {
-                eventSink = events
-
-            }
-            override fun onCancel(arguments: Any?) {
-                println("Event Channel is canceled.")
-            }
-        })
+        EventChannel(messenger, "video_editor_progress").setStreamHandler(streamHandler)
     }
 
 
@@ -70,9 +64,7 @@ public class VideoEditorPlugin : FlutterPlugin, MethodCallHandler, PluginRegistr
         if (call.method == "getPlatformVersion") {
             result.success("Android ${android.os.Build.VERSION.RELEASE}")
         } else if (call.method == "writeVideofile") {
-
             var getActivity = activity ?: return
-            var newEventSink = eventSink ?: return
             checkPermission(getActivity)
 
             val srcFilePath: String = call.argument("srcFilePath") ?: run {
@@ -89,13 +81,14 @@ public class VideoEditorPlugin : FlutterPlugin, MethodCallHandler, PluginRegistr
                         return
                     }
             val generator = VideoGeneratorService(Mp4Composer(srcFilePath, destFilePath))
-            generator.writeVideofile(processing, result, getActivity,newEventSink)
+            generator.writeVideofile(processing, result, getActivity,streamHandler)
         } else {
             result.notImplemented()
         }
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
+        Log.d("writeVideofile","call onAttachedToActivity")
         activity = binding.activity
         binding.addRequestPermissionsResultListener(this)
     }
@@ -137,3 +130,26 @@ public class VideoEditorPlugin : FlutterPlugin, MethodCallHandler, PluginRegistr
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
     }
 }
+
+
+
+class ResultStreamHandler(): EventChannel.StreamHandler {
+    var _eventSink: EventChannel.EventSink? = null
+  
+    override fun onListen(p0: Any?, p1: EventChannel.EventSink?) {
+        Log.d("ResultStreamHandler","onListen =>" + p1)
+      this._eventSink = p1
+    }
+  
+    override fun onCancel(p0: Any?) {
+      this._eventSink = null
+    }
+
+    fun sucess(p0:String){
+        Log.d("ResultStreamHandler","onListen2 =>" + this._eventSink)
+        this._eventSink?.success(p0)
+    }
+  
+  }
+
+

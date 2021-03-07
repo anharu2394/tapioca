@@ -19,16 +19,18 @@ import me.anharu.video_editor.filter.GlColorBlendFilter
 import me.anharu.video_editor.filter.GlTextOverlayFilter
 import java.util.logging.StreamHandler
 import android.util.Log
+import kotlin.math.roundToInt
 
 
 interface VideoGeneratorServiceInterface {
-    fun writeVideofile(processing: HashMap<String,HashMap<String,Any>>, result: Result, activity: Activity, eventSink: EventChannel.EventSink);
+    fun writeVideofile(processing: HashMap<String,HashMap<String,Any>>, result: Result, activity: Activity, streamHandler : ResultStreamHandler );
 }
 
-class VideoGeneratorService(
-        private val composer: Mp4Composer
-) : VideoGeneratorServiceInterface {
-    override fun writeVideofile(processing: HashMap<String,HashMap<String,Any>>, result: Result, activity: Activity, eventSink: EventChannel.EventSink ) {
+class VideoGeneratorService(private val composer: Mp4Composer) : VideoGeneratorServiceInterface {
+    
+
+    override fun writeVideofile(processing: HashMap<String,HashMap<String,Any>>, result: Result, activity: Activity, streamHandler : ResultStreamHandler ) {
+     
         val filters: MutableList<GlFilter> = mutableListOf()
         try {
             processing.forEach { (k, v) ->
@@ -62,8 +64,9 @@ class VideoGeneratorService(
                 .listener(object : Mp4Composer.Listener {
                     override fun onProgress(progress: Double) {
                         println("onProgress = " + progress)
+                        var porcent = (progress *100).roundToInt()
                         activity.runOnUiThread(Runnable {
-                            eventSink.success(progress)
+                            streamHandler.sucess("$porcent")
                         })
                     }
 

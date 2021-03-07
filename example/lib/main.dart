@@ -22,14 +22,25 @@ class _MyAppState extends State<MyApp> {
   final navigatorKey = GlobalKey<NavigatorState>();
   File _video;
   bool isLoading = false;
-  static const EventChannel _eventChannel =
-      const EventChannel('video_editor_progress');
+
+  static const stream = const EventChannel('video_editor_progress');
+  StreamSubscription _streamSubscription;
+
   double progress = 0;
 
   @override
   void initState() {
     super.initState();
     initPlatformState();
+  }
+
+  @override
+  void dispose() {
+    if (_streamSubscription != null) {
+      _streamSubscription.cancel();
+      _streamSubscription = null;
+    }
+    super.dispose();
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -91,15 +102,17 @@ class _MyAppState extends State<MyApp> {
                       try {
                         final tapiocaBalls = [
                           TapiocaBall.filter(Filters.pink, 0.2),
-                          TapiocaBall.imageOverlay(imageBitmap, 300, 300),
+                          TapiocaBall.imageOverlay(imageBitmap, 100, 200),
                           TapiocaBall.textOverlay(
-                              "text", 40, 10, 60, Color(0xffffc0cb)),
+                              "text1", 40, 10, 60, Color(0xffffc0cb)),
                           TapiocaBall.textOverlay(
                               "text 2", 100, 40, 100, Colors.red),
                           TapiocaBall.textOverlay(
-                              "text 2", 110, 60, 100, Colors.green),
+                              "text 3", 110, 70, 100, Colors.green),
                         ];
                         if (_video != null) {
+                          _observerSubcription();
+
                           final cup = Cup(Content(_video.path), tapiocaBalls);
                           cup.suckUp(path).then((_) async {
                             print("finished");
@@ -126,6 +139,15 @@ class _MyAppState extends State<MyApp> {
                   )),
       ),
     );
+  }
+
+  _observerSubcription() {
+    print("Active _observerSubcription");
+    if (_streamSubscription == null) {
+      _streamSubscription = stream.receiveBroadcastStream().listen((value) {
+        print("In Flutter progress  =>  ${value} %");
+      });
+    }
   }
 }
 

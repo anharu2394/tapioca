@@ -3,13 +3,15 @@ import AVFoundation
 import Photos
 import Flutter
 
+
 public protocol VideoGeneratorServiceInterface {
-  func writeVideofile(srcPath:String, destPath:String, processing: [String: [String:Any]], result: @escaping FlutterResult)
+    func writeVideofile(srcPath:String, destPath:String, processing: [String: [String:Any]], result: @escaping FlutterResult, eventSink : FlutterEventSink?)
 }
 
 public class VideoGeneratorService: VideoGeneratorServiceInterface {
-  public func writeVideofile(srcPath:String, destPath:String, processing: [String: [String:Any]], result: @escaping FlutterResult) {
+  public func writeVideofile(srcPath:String, destPath:String, processing: [String: [String:Any]], result: @escaping FlutterResult, eventSink : FlutterEventSink?) {
     let fileURL = URL(fileURLWithPath: srcPath)
+  
 
     let composition = AVMutableComposition()
     var vidAsset = AVURLAsset(url: fileURL, options: nil)
@@ -99,7 +101,7 @@ public class VideoGeneratorService: VideoGeneratorServiceInterface {
           let titleLayer = CALayer()
           let uiImage = imageWith(name: textOverlay.text, width: size.width, height: size.width, size: textOverlay.size.intValue, color: UIColor(hex:textOverlay.color.replacingOccurrences(of: "#", with: "")))
           titleLayer.contents = uiImage?.cgImage
-          print(uiImage?.size)
+      
           titleLayer.frame = CGRect(x: CGFloat(textOverlay.x.intValue), y: size.height - CGFloat(textOverlay.y.intValue) - uiImage!.size.height,
             width: uiImage!.size.width, height: uiImage!.size.height)
           filters.append(titleLayer)
@@ -175,12 +177,28 @@ public class VideoGeneratorService: VideoGeneratorServiceInterface {
         }
 
         assetExport.outputURL = movieDestinationUrl
+
+        ////
+        var exportProgressBarTimer = Timer() // initialize timer
+        if #available(iOS 10.0, *) {
+            exportProgressBarTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { timer in
+            // Get Progress
+            let progress = Float((assetExport.progress));
+            if (progress < 0.99) {
+                eventSink!(progress * 100)
+            }
+          }
+        }
+        ////
         assetExport.exportAsynchronously(completionHandler:{
+           exportProgressBarTimer.invalidate();
          switch assetExport.status{
            case  AVAssetExportSessionStatus.failed:
            print("failed \(assetExport.error)")
            case AVAssetExportSessionStatus.cancelled:
            print("cancelled \(assetExport.error)")
+           case AVAssetExportSessionStatus.completed:
+           result(nil)
            default:
            print("Movie complete")
            result(nil)
@@ -188,6 +206,8 @@ public class VideoGeneratorService: VideoGeneratorServiceInterface {
          }
          })
       }
+
+
       private func imageWith(name: String, width: CGFloat, height: CGFloat, size: Int, color: UIColor) -> UIImage? {
         let frame = CGRect(x: 0, y: 0, width: width, height: CGFloat(size))
         let nameLabel = UILabel(frame: frame)

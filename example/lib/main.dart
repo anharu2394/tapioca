@@ -22,6 +22,9 @@ class _MyAppState extends State<MyApp> {
   final navigatorKey = GlobalKey<NavigatorState>();
   File _video;
   bool isLoading = false;
+  static const EventChannel _eventChannel =
+      const EventChannel('video_editor_progress');
+  double progress = 0;
 
   @override
   void initState() {
@@ -50,7 +53,6 @@ class _MyAppState extends State<MyApp> {
   }
 
   _pickVideo() async {
-
     try {
       File video = await ImagePicker.pickVideo(source: ImageSource.gallery);
       print(video.path);
@@ -71,8 +73,7 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
-        body: Center(
-            child: isLoading ? CircularProgressIndicator() : RaisedButton(
+        body: Center(child: isLoading ? CircularProgressIndicator() : RaisedButton(
           child: Text("Pick a video and Edit it"),
           color: Colors.orange,
           textColor: Colors.white,
@@ -88,7 +89,7 @@ class _MyAppState extends State<MyApp> {
                     .asUint8List();
             try {
               final tapiocaBalls = [
-                TapiocaBall.filter(Filters.pink),
+                TapiocaBall.filter(Filters.pink, 0.2),
                 TapiocaBall.imageOverlay(imageBitmap, 300, 300),
                 TapiocaBall.textOverlay(
                     "text", 100, 10, 100, Color(0xffffc0cb)),
@@ -149,6 +150,7 @@ class _VideoAppState extends State<VideoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+       appBar: AppBar(),
       body: Center(
         child: _controller.value.initialized
             ? AspectRatio(
@@ -160,9 +162,16 @@ class _VideoAppState extends State<VideoScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           setState(() {
-            _controller.value.isPlaying
-                ? _controller.pause()
-                : _controller.play();
+            if (!_controller.value.isPlaying &&
+                _controller.value.initialized &&
+                (_controller.value.duration == _controller.value.position)) {
+              _controller.initialize();
+              _controller.play();
+            } else {
+              _controller.value.isPlaying
+                  ? _controller.pause()
+                  : _controller.play();
+            }
           });
         },
         child: Icon(

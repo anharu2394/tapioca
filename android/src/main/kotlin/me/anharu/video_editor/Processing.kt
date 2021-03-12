@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 
 data class Filter(val map: Map<String, Any>) {
     val type: String    by map
+    val degree: Double by map
 }
 
 data class ImageOverlay(val map: Map<String, Any>) {

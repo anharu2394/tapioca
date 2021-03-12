@@ -2,10 +2,18 @@ import Flutter
 import UIKit
 
 public class SwiftVideoEditorPlugin: NSObject, FlutterPlugin {
+
+    private var events: FlutterEventSink?
+
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(name: "video_editor", binaryMessenger: registrar.messenger())
+    
+    let eventChannel = FlutterEventChannel(name: "video_editor_progress", binaryMessenger: registrar.messenger())
     let instance = SwiftVideoEditorPlugin()
+  
     registrar.addMethodCallDelegate(instance, channel: channel)
+    eventChannel.setStreamHandler(instance)
+
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -36,9 +44,24 @@ public class SwiftVideoEditorPlugin: NSObject, FlutterPlugin {
                                   details: nil))
                 return
         }
-        video.writeVideofile(srcPath: srcName, destPath: destName, processing: processing,result: result)
+        video.writeVideofile(srcPath: srcName, destPath: destName, processing: processing,result: result, eventSink : self.events)
     default:
         result("iOS d" + UIDevice.current.systemVersion)
     }
   }
+}
+
+
+extension SwiftVideoEditorPlugin : FlutterStreamHandler {
+    
+    public func onListen(withArguments arguments: Any?,
+                         eventSink events: @escaping FlutterEventSink) -> FlutterError? {
+        self.events = events
+        return nil
+    }
+    
+    public func onCancel(withArguments arguments: Any?) -> FlutterError? {
+        self.events = nil
+        return nil
+    }
 }

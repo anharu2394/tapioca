@@ -7,11 +7,11 @@ Tapioca is a Flutter plugin for video editing on Android and iOS.
 ## Previews
 
 <table>
-    <td><img src="https://www.github.com/anharu2394/tapioca/tree/master/assets%2Fnon_filter.gif"><br>No filter</td>
-    <td><img src="https://www.github.com/anharu2394/tapioca/tree/master/assets%2Fpink_filter.gif"><br>Apply pink filter</td>
-    <td><img src="https://www.github.com/anharu2394/tapioca/tree/master/assets%2Fblue_filter.gif"><br>Apply blue filter</td>
-    <td><img src="https://www.github.com/anharu2394/tapioca/tree/master/assets%2Ftext_filter.gif"><br>Apply text filter</td>
-    <td><img src="https://www.github.com/anharu2394/tapioca/tree/master/assets%2Ftapioca_filter.gif"><br>Apply image filter</td>
+    <td><img src="https://github.com/anharu2394/tapioca/blob/master/assets/non_filter.gif"><br>No filter</td>
+    <td><img src="https://github.com/anharu2394/tapioca/blob/master/assets/pink_filter.gif"><br>Apply pink filter</td>
+    <td><img src="https://github.com/anharu2394/tapioca/blob/master/assets/blue_filter.gif"><br>Apply blue filter</td>
+    <td><img src="https://github.com/anharu2394/tapioca/blob/master/assets/text_filter.gif"><br>Apply text filter</td>
+    <td><img src="https://github.com/anharu2394/tapioca/blob/master/assets/tapioca_filter.gif"><br>Apply image filter</td>
 </table>
 
 ## Features

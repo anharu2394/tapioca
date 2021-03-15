@@ -1,4 +1,4 @@
-## 1.0.2+1
+## 1.0.2+2
 * Fixed an issue where the README.md image was not displayed
 
 ## 1.0.2

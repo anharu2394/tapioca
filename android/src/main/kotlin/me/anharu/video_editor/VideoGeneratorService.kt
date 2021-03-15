@@ -12,18 +12,25 @@ import me.anharu.video_editor.ImageOverlay
 import io.flutter.plugin.common.MethodChannel.Result
 import android.graphics.Paint.Align
 import android.graphics.Paint.ANTI_ALIAS_FLAG
+import android.util.EventLog
+import com.daasuu.mp4compose.VideoFormatMimeType
+import io.flutter.plugin.common.EventChannel
 import me.anharu.video_editor.filter.GlColorBlendFilter
 import me.anharu.video_editor.filter.GlTextOverlayFilter
+import java.util.logging.StreamHandler
+import android.util.Log
+import kotlin.math.roundToInt
 
 
 interface VideoGeneratorServiceInterface {
-    fun writeVideofile(processing: HashMap<String,HashMap<String,Any>>, result: Result, activity: Activity);
+    fun writeVideofile(processing: HashMap<String,HashMap<String,Any>>, result: Result, activity: Activity, streamHandler : ResultStreamHandler );
 }
 
-class VideoGeneratorService(
-        private val composer: Mp4Composer
-) : VideoGeneratorServiceInterface {
-    override fun writeVideofile(processing: HashMap<String,HashMap<String,Any>>, result: Result, activity: Activity ) {
+class VideoGeneratorService(private val composer: Mp4Composer) : VideoGeneratorServiceInterface {
+    
+
+    override fun writeVideofile(processing: HashMap<String,HashMap<String,Any>>, result: Result, activity: Activity, streamHandler : ResultStreamHandler ) {
+     
         val filters: MutableList<GlFilter> = mutableListOf()
         try {
             processing.forEach { (k, v) ->
@@ -50,9 +57,14 @@ class VideoGeneratorService(
             })
         }
         composer.filter(GlFilterGroup( filters))
+                .videoFormatMimeType(VideoFormatMimeType.HEVC)
                 .listener(object : Mp4Composer.Listener {
                     override fun onProgress(progress: Double) {
                         println("onProgress = " + progress)
+                        var porcent = (progress *100)
+                        activity.runOnUiThread(Runnable {
+                            streamHandler.sucess(porcent)
+                        })
                     }
 
                     override fun onCompleted() {
@@ -71,9 +83,9 @@ class VideoGeneratorService(
                         println(exception);
                         activity.runOnUiThread(Runnable {
                             result.error("video_processing_failed", "video processing is failed.", null)
+
                         })
                     }
                 }).start()
     }
 }
-

@@ -22,6 +22,7 @@ class _MyAppState extends State<MyApp> {
   final navigatorKey = GlobalKey<NavigatorState>();
   File _video;
   bool isLoading = false;
+  double _progress = 0.0;
 
   @override
   void initState() {
@@ -50,7 +51,6 @@ class _MyAppState extends State<MyApp> {
   }
 
   _pickVideo() async {
-
     try {
       File video = await ImagePicker.pickVideo(source: ImageSource.gallery);
       print(video.path);
@@ -72,49 +72,62 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Center(
-            child: isLoading ? CircularProgressIndicator() : RaisedButton(
-          child: Text("Pick a video and Edit it"),
-          color: Colors.orange,
-          textColor: Colors.white,
-          onPressed: () async {
-            print("clicked!");
-            await _pickVideo();
-            var tempDir = await getTemporaryDirectory();
-            final path = '${tempDir.path}/result.mp4';
-            print(tempDir);
-            final imageBitmap =
-                (await rootBundle.load("assets/tapioca_drink.png"))
-                    .buffer
-                    .asUint8List();
-            try {
-              final tapiocaBalls = [
-                TapiocaBall.filter(Filters.pink),
-                TapiocaBall.imageOverlay(imageBitmap, 300, 300),
-                TapiocaBall.textOverlay(
-                    "text", 100, 10, 100, Color(0xffffc0cb)),
-              ];
-              if (_video != null) {
-                final cup = Cup(Content(_video.path), tapiocaBalls);
-                cup.suckUp(path).then((_) async {
-                  print("finished");
-                  GallerySaver.saveVideo(path).then((bool success) {
-                    print(success.toString());
-                  });
-                  navigatorKey.currentState.push(
-                    MaterialPageRoute(builder: (context) => VideoScreen(path)),
-                  );
-                  setState(() {
-                    isLoading = false;
-                  });
-                });
-              } else {
-                print("video is null");
-              }
-            } on PlatformException {
-              print("error!!!!");
-            }
-          },
-        )),
+            child: isLoading
+                ? CircularProgressIndicator(
+                    value: _progress,
+                    valueColor: new AlwaysStoppedAnimation<Color>(Colors.blue),
+                  )
+                : RaisedButton(
+                    child: Text("Pick a video and Edit it"),
+                    color: Colors.orange,
+                    textColor: Colors.white,
+                    onPressed: () async {
+                      print("clicked!");
+                      await _pickVideo();
+
+                      var tempDir = await getTemporaryDirectory();
+                      final path = '${tempDir.path}/result.mp4';
+                      print(tempDir);
+                      final imageBitmap =
+                          (await rootBundle.load("assets/tapioca_drink.png"))
+                              .buffer
+                              .asUint8List();
+                      try {
+                        final tapiocaBalls = [
+                          TapiocaBall.filter(Filters.pink),
+                          TapiocaBall.imageOverlay(imageBitmap, 300, 300),
+                          TapiocaBall.textOverlay(
+                              "text", 100, 10, 100, Color(0xffffc0cb)),
+                        ];
+                        if (_video != null) {
+                          final cup = Cup(Content(_video.path), tapiocaBalls);
+                          VideoEditor().getProgressStatus.listen((value) {
+                            setState(() {
+                              _progress = value / 100;
+                            });
+                            print("In Flutter progress  =>  ${value} %");
+                          });
+                          cup.suckUp(path).then((_) async {
+                            print("finished");
+                            GallerySaver.saveVideo(path).then((bool success) {
+                              print(success.toString());
+                            });
+                            navigatorKey.currentState.push(
+                              MaterialPageRoute(
+                                  builder: (context) => VideoScreen(path)),
+                            );
+                            setState(() {
+                              isLoading = false;
+                            });
+                          });
+                        } else {
+                          print("video is null");
+                        }
+                      } on PlatformException {
+                        print("error!!!!");
+                      }
+                    },
+                  )),
       ),
     );
   }
@@ -149,6 +162,7 @@ class _VideoAppState extends State<VideoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: Center(
         child: _controller.value.initialized
             ? AspectRatio(

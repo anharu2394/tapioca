@@ -10,9 +10,7 @@ class VideoEditor {
     return version;
   }
 
-  static Future writeVideofile(
-      String srcFilePath,
-      String destFilePath,
+  static Future writeVideofile(String srcFilePath, String destFilePath,
       Map<String, Map<String, dynamic>> processing,
       {int? startTime, int? endTime}) async {
     await _channel.invokeMethod('writeVideofile', <String, dynamic>{
@@ -24,13 +22,25 @@ class VideoEditor {
     });
   }
 
-  static Future<void> onTrimVideo(String srcFilePath,
-      String destFilePath, double startTime, double endTime) async{
+  static Future<void> onTrimVideo(String srcFilePath, String destFilePath,
+      double startTime, double endTime) async {
     await _channel.invokeMethod('trim_video', <String, dynamic>{
       'srcFilePath': srcFilePath,
       'destFilePath': destFilePath,
       'startTime': startTime.toInt(),
       'endTime': endTime.toInt()
+    });
+  }
+
+  static Future<void> speed(
+    String srcFilePath,
+    String destFilePath,
+    double speed,
+  ) async {
+    await _channel.invokeMethod('speed_change', <String, dynamic>{
+      'srcFilePath': srcFilePath,
+      'destFilePath': destFilePath,
+      'speed': speed,
     });
   }
 }

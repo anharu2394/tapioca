@@ -38,8 +38,7 @@ class ThumbnailViewer extends StatelessWidget {
         timeMs: (_eachPart * i).toInt(),
         quality: quality,
       );
-
-      _byteList.add(_bytes);
+      if (_bytes != null) _byteList.add(_bytes);
 
       yield _byteList;
     }

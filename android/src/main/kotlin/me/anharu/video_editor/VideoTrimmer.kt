@@ -14,6 +14,10 @@ class VideoTrimmer(inputVideo: String, outputVideo: String, val result: Result, 
 
                     }
 
+                    override fun onCurrentWrittenVideoTime(timeUs: Long) {
+
+                    }
+
                     override fun onCompleted() {
                         activity.runOnUiThread(Runnable {
                             result.success(null)

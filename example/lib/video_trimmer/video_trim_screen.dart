@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:tapioca/tapioca.dart';
@@ -20,6 +21,7 @@ class _VideoTrimScreenState extends State<VideoTrimScreen> {
   double endPos = -1;
 
   initializeVideo() {
+    if (_video == null) return;
     _controller = VideoPlayerController.file(File(_video!.path))
       ..initialize().then((_) {
         // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
@@ -52,10 +54,13 @@ class _VideoTrimScreenState extends State<VideoTrimScreen> {
       print("start time === $startPos ===  end time === $endPos");
       var tempDir = await getTemporaryDirectory();
       final path = '${tempDir.path}/result.mp4';
-      await VideoEditor.onTrimVideo(_video!.path, path, startPos, endPos);
+      print("outputpath === $path");
+      // await VideoEditor.onTrimVideo(_video!.path, path, startPos, endPos);
+      print("outputpath after === $path");
+      await VideoEditor.speed(_video!.path, path, 3);
       Navigator.push(
           context, MaterialPageRoute(builder: (_) => VideoScreen(path)));
-    } on Exception catch (e) {
+    } on PlatformException catch (e) {
       print(e);
     }
   }
@@ -69,8 +74,7 @@ class _VideoTrimScreenState extends State<VideoTrimScreen> {
                 onPressed: this._onVideoSelectPressed,
                 icon: Icon(Icons.ondemand_video)),
             IconButton(
-                onPressed: this.onTrimVideoPressed,
-                icon: Icon(Icons.done))
+                onPressed: this.onTrimVideoPressed, icon: Icon(Icons.done))
           ],
         ),
         body: Center(
@@ -81,21 +85,25 @@ class _VideoTrimScreenState extends State<VideoTrimScreen> {
                       aspectRatio: _controller!.value.aspectRatio,
                       child: VideoPlayer(_controller!),
                     ),
-                    TrimEditor(
-                      viewerWidth: MediaQuery.of(context).size.width,
-                      viewerHeight: 50,
-                      videoFile: _video!.path,
-                      videoPlayerController: _controller!,
-                      fit: BoxFit.cover,
-                      onChangeEnd: (position) {
-                        this.endPos = position;
-                        print("onchange end ==== $position");
-                      },
-                      onChangeStart: (position) {
-                        this.startPos = position;
-                        print("onchange start ==== $position");
-                      },
-                      onChangePlaybackState: (state) {},
+                    Positioned(
+                      left: 20,
+                      right: 20,
+                      child: TrimEditor(
+                        viewerWidth: MediaQuery.of(context).size.width - 40,
+                        viewerHeight: 50,
+                        videoFile: _video!.path,
+                        videoPlayerController: _controller!,
+                        fit: BoxFit.cover,
+                        onChangeEnd: (position) {
+                          this.endPos = position;
+                          print("onchange end ==== $position");
+                        },
+                        onChangeStart: (position) {
+                          this.startPos = position;
+                          print("onchange start ==== $position");
+                        },
+                        onChangePlaybackState: (state) {},
+                      ),
                     )
                   ],
                 )

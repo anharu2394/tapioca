@@ -93,7 +93,22 @@ public class VideoEditorPlugin : FlutterPlugin, MethodCallHandler, PluginRegistr
                 val endTime: Long = call.argument<Int>("endTime")?.toLong() ?: -1
                 VideoTrimmer(srcFilePath, destFilePath, result, getActivity).trimVideo(startTime, endTime)
             }
+            "speed_change" -> {
+                val getActivity = activity ?: return
+                val srcFilePath: String = call.argument("srcFilePath") ?: run {
+                    result.error("src_file_path_not_found", "the src file path is not found.", null)
+                    return
+                }
+                val destFilePath: String = call.argument("destFilePath") ?: run {
+                    result.error("dest_file_path_not_found", "the dest file path is not found.", null)
+                    return
+                }
+                val speed: Float = call.argument<Double>("speed")?.toFloat() ?: 0F
+               print("===>$speed");
+                SpeedChanger(srcFilePath, destFilePath, result, getActivity).speed(speed)
+            }
             else -> {
+                print("===>sxxxxxxxx");
                 result.notImplemented()
             }
         }

@@ -2,6 +2,7 @@ package me.anharu.video_editor
 
 import android.Manifest
 import android.app.Activity
+import android.util.Log
 import androidx.annotation.NonNull
 import androidx.core.app.ActivityCompat
 import com.daasuu.mp4compose.composer.Mp4Composer
@@ -15,6 +16,7 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry
 import io.flutter.plugin.common.PluginRegistry.Registrar
+import kotlin.math.log
 
 
 /** VideoEditorPlugin */
@@ -51,6 +53,7 @@ public class VideoEditorPlugin : FlutterPlugin, MethodCallHandler, PluginRegistr
     }
 
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
+       Log.d("demo",call.method);
         when (call.method) {
             "getPlatformVersion" -> {
                 result.success("Android ${android.os.Build.VERSION.RELEASE}")
@@ -103,7 +106,7 @@ public class VideoEditorPlugin : FlutterPlugin, MethodCallHandler, PluginRegistr
                     result.error("dest_file_path_not_found", "the dest file path is not found.", null)
                     return
                 }
-                val speed: Float = call.argument<Double>("speed")?.toFloat() ?: 0F
+                val speed: Float = call.argument<Double>("speed")?.toFloat() ?: 1F
                print("===>$speed");
                 SpeedChanger(srcFilePath, destFilePath, result, getActivity).speed(speed)
             }

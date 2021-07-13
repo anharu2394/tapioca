@@ -9,14 +9,14 @@ class SpeedChanger(inputVideo: String, outputVideo: String, val result: Result, 
     var composer: Mp4Composer = Mp4Composer(inputVideo, outputVideo)
 
     fun speed(speed:Float) {
-        composer.timeScale(10F)
+        composer.timeScale(1F)
             .listener(object : Mp4Composer.Listener {
                 override fun onProgress(progress: Double) {
 
                 }
 
                 override fun onCurrentWrittenVideoTime(timeUs: Long) {
-                    TODO("Not yet implemented")
+
                 }
 
                 override fun onCompleted() {

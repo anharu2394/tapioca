@@ -55,9 +55,10 @@ class _VideoTrimScreenState extends State<VideoTrimScreen> {
       var tempDir = await getTemporaryDirectory();
       final path = '${tempDir.path}/result.mp4';
       print("outputpath === $path");
-      // await VideoEditor.onTrimVideo(_video!.path, path, startPos, endPos);
+      await VideoEditor.onTrimVideo(_video!.path, path, startPos, endPos);
+
+      // await VideoEditor.speed(_video!.path, path, 3);
       print("outputpath after === $path");
-      await VideoEditor.speed(_video!.path, path, 3);
       Navigator.push(
           context, MaterialPageRoute(builder: (_) => VideoScreen(path)));
     } on PlatformException catch (e) {

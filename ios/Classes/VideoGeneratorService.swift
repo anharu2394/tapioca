@@ -168,10 +168,10 @@ public class VideoGeneratorService: VideoGeneratorServiceInterface {
         assetExport.outputURL = movieDestinationUrl
         assetExport.exportAsynchronously(completionHandler:{
          switch assetExport.status{
-           case  AVAssetExportSessionStatus.failed:
-           print("failed \(assetExport.error)")
-           case AVAssetExportSessionStatus.cancelled:
-           print("cancelled \(assetExport.error)")
+         case  AVAssetExportSession.Status.failed:
+            print("failed \(String(describing: assetExport.error))")
+         case AVAssetExportSession.Status.cancelled:
+            print("cancelled \(String(describing: assetExport.error))")
            default:
            print("Movie complete")
            result(nil)

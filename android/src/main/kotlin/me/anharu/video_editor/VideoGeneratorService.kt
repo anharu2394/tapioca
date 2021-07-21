@@ -17,13 +17,13 @@ import me.anharu.video_editor.filter.GlTextOverlayFilter
 
 
 interface VideoGeneratorServiceInterface {
-    fun writeVideofile(processing: HashMap<String,HashMap<String,Any>>, result: Result, activity: Activity);
+    fun writeVideofile(processing: HashMap<String,HashMap<String,Any>>, result: Result, activity: Activity, startTime: Long = 0, endTime: Long = -1);
 }
 
 class VideoGeneratorService(
         private val composer: Mp4Composer
 ) : VideoGeneratorServiceInterface {
-    override fun writeVideofile(processing: HashMap<String,HashMap<String,Any>>, result: Result, activity: Activity ) {
+    override fun writeVideofile(processing: HashMap<String,HashMap<String,Any>>, result: Result, activity: Activity,startTime: Long, endTime: Long) {
         val filters: MutableList<GlFilter> = mutableListOf()
         try {
             processing.forEach { (k, v) ->
@@ -50,9 +50,13 @@ class VideoGeneratorService(
             })
         }
         composer.filter(GlFilterGroup( filters))
+                .trim(startTime, endTime)
                 .listener(object : Mp4Composer.Listener {
                     override fun onProgress(progress: Double) {
                         println("onProgress = " + progress)
+                    }
+                    override fun onCurrentWrittenVideoTime(timeUs: Long) {
+
                     }
 
                     override fun onCompleted() {
@@ -68,7 +72,7 @@ class VideoGeneratorService(
                     }
 
                     override fun onFailed(exception: Exception) {
-                        println(exception);
+                        exception.printStackTrace()
                         activity.runOnUiThread(Runnable {
                             result.error("video_processing_failed", "video processing is failed.", null)
                         })

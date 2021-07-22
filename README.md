@@ -7,11 +7,11 @@ Tapioca is a Flutter plugin for video editing on Android and iOS.
 ## Previews
 
 <table>
-    <td><img src="https://github.com/anharu2394/tapioca/blob/master/assets/non_filter.gif"><br>No filter</td>
-    <td><img src="https://github.com/anharu2394/tapioca/blob/master/assets/pink_filter.gif"><br>Apply pink filter</td>
-    <td><img src="https://github.com/anharu2394/tapioca/blob/master/assets/blue_filter.gif"><br>Apply blue filter</td>
-    <td><img src="https://github.com/anharu2394/tapioca/blob/master/assets/text_filter.gif"><br>Apply text filter</td>
-    <td><img src="https://github.com/anharu2394/tapioca/blob/master/assets/tapioca_filter.gif"><br>Apply image filter</td>
+    <td><img src="https://raw.githubusercontent.com/anharu2394/tapioca/master/assets/non_filter.gif"><br>No filter</td>
+    <td><img src="https://raw.githubusercontent.com/anharu2394/tapioca/master/assets/pink_filter.gif"><br>Apply pink filter</td>
+    <td><img src="https://raw.githubusercontent.com/anharu2394/tapioca/master/assets/blue_filter.gif"><br>Apply blue filter</td>
+    <td><img src="https://raw.githubusercontent.com/anharu2394/tapioca/master/assets/text_filter.gif"><br>Apply text filter</td>
+    <td><img src="https://raw.githubusercontent.com/anharu2394/tapioca/master/assets/tapioca_filter.gif"><br>Apply image filter</td>
 </table>
 
 ## Features
@@ -102,3 +102,8 @@ You can edit the video by executing `.suckUp()`.
 ## Articles
 
 - [“Tapioca”, the flutter package to edit videos easily and not using FFmpeg](https://medium.com/@anharu/tapioca-the-flutter-package-to-edit-videos-easily-and-not-using-ffmpeg-2e1a85824796)
+
+## Support
+
+You can also support me by becoming a patron:
+https://anharu.fanbox.cc

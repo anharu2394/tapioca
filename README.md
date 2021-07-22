@@ -102,3 +102,8 @@ You can edit the video by executing `.suckUp()`.
 ## Articles
 
 - [“Tapioca”, the flutter package to edit videos easily and not using FFmpeg](https://medium.com/@anharu/tapioca-the-flutter-package-to-edit-videos-easily-and-not-using-ffmpeg-2e1a85824796)
+
+## Support
+
+You can also support me by becoming a patron:
+https://anharu.fanbox.cc

@@ -1,3 +1,6 @@
+## 1.0.3
+* Update the version of video_player
+
 ## 1.0.2+3
 * Add the support section on README.md
 

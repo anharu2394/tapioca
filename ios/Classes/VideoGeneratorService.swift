@@ -8,108 +8,19 @@ public protocol VideoGeneratorServiceInterface {
 }
 
 public class VideoGeneratorService: VideoGeneratorServiceInterface {
-  public func writeVideofile(srcPath:String, destPath:String, processing: [String: [String:Any]], result: @escaping FlutterResult) {
-    let fileURL = URL(fileURLWithPath: srcPath)
-
-    let composition = AVMutableComposition()
-    var vidAsset = AVURLAsset(url: fileURL, options: nil)
-
-    // get video track
-    let vtrack =  vidAsset.tracks(withMediaType: AVMediaType.video)
-    print("eee")
-    guard let videoTrack: AVAssetTrack = vtrack[0] as AVAssetTrack? else {
-      print("not found track")
-      result(FlutterError(code: "video_processing_failed",
-        message: "video track is not found.",
-        details: nil))
-      return
-    }
-    print("tabunn")
-    let vidDuration = videoTrack.timeRange.duration
-    let vidTimerange = CMTimeRangeMake(start: CMTime.zero, duration: vidAsset.duration)
-
-    var error: NSError?
-    guard let compositionvideoTrack:AVMutableCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.video, preferredTrackID: kCMPersistentTrackID_Invalid) else {
-      result(FlutterError(code: "video_processing_failed",
-        message: "video processing is failed.",
-        details: nil))
-      return
-    }
-    do {
-      try compositionvideoTrack.insertTimeRange(vidTimerange, of: videoTrack, at: CMTime.zero)
-      if let audioAssetTrack = vidAsset.tracks(withMediaType: .audio).first,
-      let compositionAudioTrack = composition.addMutableTrack(
-        withMediaType: .audio,
-        preferredTrackID: kCMPersistentTrackID_Invalid) {
-        try compositionAudioTrack.insertTimeRange(
-          vidTimerange,
-          of: audioAssetTrack,
-          at: .zero)
-      }
-      } catch {
-        print(error)
-        result(FlutterError(code: "video_processing_failed",
-          message: "video processing is failed.",
-          details: nil))
-        return
-      }
-
-      compositionvideoTrack.preferredTransform = videoTrack.preferredTransform
-      let size = videoTrack.naturalSize
-      var filters  = [CALayer]()
-      for (key, value) in processing  {
-        switch key {
-          case "Filter":
-          guard let type = value["type"] as? String else {
-            print("not found value")
-            result(FlutterError(code: "processing_data_invalid",
-              message: "one Filter member is not found.",
-              details: nil))
-            return
-          }
-          let filter = Filter(type: type)
-          let layer = CALayer()
-          layer.backgroundColor = UIColor(hex:filter.type.replacingOccurrences(of: "#", with: "")).cgColor
-          layer.opacity = 0.5
-          layer.frame = CGRect(x: 0, y: 0, width: size.width, height: size.height)
-          filters.append(layer)
-
-          case "TextOverlay":
-          guard let text = value["text"] as? String,
-          let x = value["x"] as? NSNumber,
-          let y = value["y"] as? NSNumber,
-          let textSize = value["size"] as? NSNumber,
-          let color = value["color"] as? String else {
-            print("not found text overlay")
-            result(FlutterError(code: "processing_data_invalid",
-              message: "one TextOverlay member is not found.",
-              details: nil))
-            return
-          }
-          let textOverlay = TextOverlay(text: text, x: x, y: y, size: textSize, color: color)
-          let titleLayer = CALayer()
-          let uiImage = imageWith(name: textOverlay.text, width: size.width, height: size.width, size: textOverlay.size.intValue, color: UIColor(hex:textOverlay.color.replacingOccurrences(of: "#", with: "")))
-          titleLayer.contents = uiImage?.cgImage
-          print(uiImage?.size)
-          titleLayer.frame = CGRect(x: CGFloat(textOverlay.x.intValue), y: size.height - CGFloat(textOverlay.y.intValue) - uiImage!.size.height,
-            width: uiImage!.size.width, height: uiImage!.size.height)
-          filters.append(titleLayer)
-          case "ImageOverlay":
-          guard let bitmap = value["bitmap"] as? FlutterStandardTypedData,
-          let x = value["x"] as? NSNumber,
-          let y = value["y"] as? NSNumber else {
-            print("not found image overlay")
-            result(FlutterError(code: "processing_data_invalid",
-              message: "one ImageOverlay member is not found.",
-              details: nil))
-            return
-          }
-          let imageOverlay = ImageOverlay(bitmap: bitmap.data, x: x, y: y)
-          let datos: Data = imageOverlay.bitmap
-          let image = UIImage(data: datos)
-          let imglayer = CALayer()
-          imglayer.contents = image?.cgImage
-          guard let imageWidth: CGFloat = image?.size.width else {
+    public func writeVideofile(srcPath:String, destPath:String, processing: [String: [String:Any]], result: @escaping FlutterResult) {
+        let fileURL = URL(fileURLWithPath: srcPath)
+        
+        let composition = AVMutableComposition()
+        let vidAsset = AVURLAsset(url: fileURL)
+        
+        // get video track
+        print("aaasd")
+        let videoTrack: AVAssetTrack = vidAsset.tracks(withMediaType: .video)[0]
+        print("tabunn")
+        let vidTimerange = CMTimeRangeMake(start: CMTime.zero, duration: vidAsset.duration)
+        
+        guard let compositionvideoTrack:AVMutableCompositionTrack = composition.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid) else {
             result(FlutterError(code: "video_processing_failed",
               message: "video processing is failed.",
               details: nil))

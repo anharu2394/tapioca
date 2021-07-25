@@ -22,21 +22,27 @@ public class VideoGeneratorService: VideoGeneratorServiceInterface {
         
         guard let compositionvideoTrack:AVMutableCompositionTrack = composition.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid) else {
             result(FlutterError(code: "video_processing_failed",
-              message: "video processing is failed.",
-              details: nil))
+                                message: "composition.addMutableTrack is failed.",
+                                details: nil))
             return
-          }
-          guard let imageHeight: CGFloat = image?.size.height else {
+        }
+        do {
+            try compositionvideoTrack.insertTimeRange(vidTimerange, of: videoTrack, at: .zero)
+            if let audioAssetTrack = vidAsset.tracks(withMediaType: .audio).first,
+               let compositionAudioTrack = composition.addMutableTrack(
+                withMediaType: .audio,
+                preferredTrackID: kCMPersistentTrackID_Invalid) {
+                try compositionAudioTrack.insertTimeRange(
+                    vidTimerange,
+                    of: audioAssetTrack,
+                    at: .zero)
+            }
+        } catch {
+            print(error)
             result(FlutterError(code: "video_processing_failed",
-              message: "video processing is failed.",
-              details: nil))
+                                message: "compositionvideoTrack is failed.",
+                                details: nil))
             return
-          }
-          imglayer.frame = CGRect(x:CGFloat(imageOverlay.x.intValue), y: size.height - CGFloat(imageOverlay.y.intValue) - imageHeight, width: imageWidth, height: imageHeight)
-          imglayer.opacity = 1
-          filters.append(imglayer)
-          default:
-          print("Not implement filter name")
         }
       }
       let videolayer = CALayer()

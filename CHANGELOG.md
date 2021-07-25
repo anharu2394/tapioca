@@ -1,3 +1,6 @@
+## 1.0.4
+* Resolve #19(Use CIFilter without AVVideoCompositionCoreAnimationTool)
+
 ## 1.0.3
 * Update the version of video_player
 

@@ -44,42 +44,88 @@ public class VideoGeneratorService: VideoGeneratorServiceInterface {
                                 details: nil))
             return
         }
-      }
-      let videolayer = CALayer()
-      videolayer.frame = CGRect(x:0,y:0, width: size.width, height: size.height)
-      let parentlayer = CALayer()
-      parentlayer.frame = CGRect(x: 0, y: 0, width: size.width, height: size.height)
-      parentlayer.addSublayer(videolayer)
-      for item in filters {
-        parentlayer.addSublayer(item)
-      }
-      let layercomposition = AVMutableVideoComposition()
-      layercomposition.frameDuration = CMTime(value: 1, timescale:30)
-      layercomposition.renderSize = size
-      layercomposition.animationTool = AVVideoCompositionCoreAnimationTool(postProcessingAsVideoLayer: videolayer, in: parentlayer)
-
-      let instruction = AVMutableVideoCompositionInstruction()
-      instruction.timeRange = CMTimeRangeMake(start: CMTime.zero, duration: composition.duration)
-      let layerinstruction = AVMutableVideoCompositionLayerInstruction(assetTrack: compositionvideoTrack)
-      instruction.layerInstructions = [layerinstruction]
-      layercomposition.instructions = [instruction]
-
-      let movieFilePath = destPath
-      let movieDestinationUrl = URL(fileURLWithPath: movieFilePath)
-      print(movieDestinationUrl)
-      guard let assetExport = AVAssetExportSession(asset: composition, presetName:AVAssetExportPresetHighestQuality) else {
-        print("assertExport error")
-        result(FlutterError(code: "video_processing_failed",
-          message: "video processing is failed.",
-          details: nil))
-        return
-      }
-      assetExport.outputFileType = AVFileType.mp4
-      assetExport.videoComposition = layercomposition
-
-      do { // delete old video
-        try FileManager.default.removeItem(at: movieDestinationUrl)
-        } catch {
+        
+        compositionvideoTrack.preferredTransform = videoTrack.preferredTransform
+        let size = videoTrack.naturalSize
+        
+        let layercomposition = AVVideoComposition(asset: composition) { (filteringRequest) in
+            var source = filteringRequest.sourceImage.clampedToExtent()
+            for (key, value) in processing  {
+                switch key {
+                case "Filter":
+                    guard let type = value["type"] as? String else {
+                        print("not found value")
+                        result(FlutterError(code: "processing_data_invalid",
+                                            message: "one Filter member is not found.",
+                                            details: nil))
+                        return
+                    }
+                    let overlayColor = UIColor(hex: type.replacingOccurrences(of: "#", with: "")).withAlphaComponent(0.5)
+                    let c = CIColor(color: overlayColor)
+                    guard let colorFilter = CIFilter(name: "CIConstantColorGenerator", parameters: [kCIInputColorKey: c]) else {
+                        fatalError()
+                    }
+                    let parameters = [
+                        kCIInputBackgroundImageKey: source,
+                        kCIInputImageKey: colorFilter.outputImage!
+                    ]
+                    guard let filter = CIFilter(name: "CISourceOverCompositing", parameters: parameters) else {
+                        fatalError()
+                    }
+                    guard let outputImage = filter.outputImage else { fatalError() }
+                    let cropRect = source.extent
+                    source = outputImage.cropped(to: cropRect)
+                    
+                case "TextOverlay":
+                    guard let text = value["text"] as? String,
+                          let x = value["x"] as? NSNumber,
+                          let y = value["y"] as? NSNumber,
+                          let textSize = value["size"] as? NSNumber,
+                          let color = value["color"] as? String else {
+                        print("not found text overlay")
+                        result(FlutterError(code: "processing_data_invalid",
+                                            message: "one TextOverlay member is not found.",
+                                            details: nil))
+                        return
+                    }
+                    let font = UIFont.systemFont(ofSize: CGFloat(truncating: textSize))
+                    
+                    let attributes: [NSAttributedString.Key: Any] = [
+                        .font: font,
+                        .foregroundColor: UIColor(hex:color.replacingOccurrences(of: "#", with: "")),
+                    ]
+                    
+                    let attributedQuote = NSAttributedString(string: text, attributes: attributes)
+                    let textGenerationFilter = CIFilter(name: "CIAttributedTextImageGenerator")!
+                    textGenerationFilter.setValue(attributedQuote, forKey: "inputText")
+                    source = textGenerationFilter.outputImage!.transformed(by: CGAffineTransform(translationX: CGFloat(truncating: x), y: filteringRequest.sourceImage.extent.height -  CGFloat(textSize) - CGFloat(truncating: y)))
+                        .applyingFilter("CISourceAtopCompositing", parameters: [ kCIInputBackgroundImageKey: source])
+                case "ImageOverlay":
+                    guard let bitmap = value["bitmap"] as? FlutterStandardTypedData,
+                          let x = value["x"] as? NSNumber,
+                          let y = value["y"] as? NSNumber else {
+                        print("not found image overlay")
+                        result(FlutterError(code: "processing_data_invalid",
+                                            message: "one ImageOverlay member is not found.",
+                                            details: nil))
+                        return
+                    }
+                    let imageFilter = CIFilter(name: "CISourceOverCompositing")!
+                    guard let watermarkImage = CIImage(data: bitmap.data) else {
+                        result(FlutterError(code: "video_processing_failed",
+                                            message: "creating TextImage is failed.",
+                                            details: nil))
+                        return
+                    }
+                    imageFilter.setValue(source, forKey: "inputBackgroundImage")
+                    let transform = CGAffineTransform(translationX: filteringRequest.sourceImage.extent.width - watermarkImage.extent.width - CGFloat(truncating: x), y:  CGFloat(truncating: y) - filteringRequest.sourceImage.extent.height)
+                    imageFilter.setValue(watermarkImage.transformed(by: transform), forKey: "inputImage")
+                    source = imageFilter.outputImage!
+                default:
+                    print("Not implement filter name")
+                }
+            }
+            filteringRequest.finish(with: source, context: nil)
         }
 
         assetExport.outputURL = movieDestinationUrl

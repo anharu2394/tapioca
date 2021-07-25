@@ -4,7 +4,7 @@ import Photos
 import Flutter
 
 public protocol VideoGeneratorServiceInterface {
-  func writeVideofile(srcPath:String, destPath:String, processing: [String: [String:Any]], result: @escaping FlutterResult)
+    func writeVideofile(srcPath:String, destPath:String, processing: [String: [String:Any]], result: @escaping FlutterResult)
 }
 
 public class VideoGeneratorService: VideoGeneratorServiceInterface {

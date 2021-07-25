@@ -20,7 +20,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
   final navigatorKey = GlobalKey<NavigatorState>();
-  File _video;
+  PickedFile _video;
   bool isLoading = false;
 
   @override
@@ -52,7 +52,8 @@ class _MyAppState extends State<MyApp> {
   _pickVideo() async {
 
     try {
-      File video = await ImagePicker.pickVideo(source: ImageSource.gallery);
+      final ImagePicker _picker = ImagePicker();
+      PickedFile video = await _picker.getVideo(source: ImageSource.gallery);
       print(video.path);
       setState(() {
         _video = video;
@@ -80,7 +81,7 @@ class _MyAppState extends State<MyApp> {
             print("clicked!");
             await _pickVideo();
             var tempDir = await getTemporaryDirectory();
-            final path = '${tempDir.path}/result.mp4';
+            final path = '${tempDir.path}/${DateTime.now().millisecondsSinceEpoch}result.mp4';
             print(tempDir);
             final imageBitmap =
                 (await rootBundle.load("assets/tapioca_drink.png"))
@@ -97,6 +98,7 @@ class _MyAppState extends State<MyApp> {
                 final cup = Cup(Content(_video.path), tapiocaBalls);
                 cup.suckUp(path).then((_) async {
                   print("finished");
+                  print(path);
                   GallerySaver.saveVideo(path).then((bool success) {
                     print(success.toString());
                   });

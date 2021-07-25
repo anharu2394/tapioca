@@ -127,40 +127,35 @@ public class VideoGeneratorService: VideoGeneratorServiceInterface {
             }
             filteringRequest.finish(with: source, context: nil)
         }
-
+        let movieDestinationUrl = URL(fileURLWithPath: destPath)
+        let preset: String = AVAssetExportPresetHighestQuality
+        guard let assetExport = AVAssetExportSession(asset: composition, presetName: preset) else {
+            print("assertExport error")
+            result(FlutterError(code: "video_processing_failed",
+                                message: "init AVAssetExportSession is failed.",
+                                details: nil))
+            return
+        }
+        assetExport.outputFileType = .mp4
+        assetExport.videoComposition = layercomposition
+        
         assetExport.outputURL = movieDestinationUrl
-        assetExport.exportAsynchronously(completionHandler:{
-         switch assetExport.status{
-           case  AVAssetExportSessionStatus.failed:
-           print("failed \(assetExport.error)")
-           case AVAssetExportSessionStatus.cancelled:
-           print("cancelled \(assetExport.error)")
-           default:
-           print("Movie complete")
-           result(nil)
-
-         }
-         })
-      }
-      private func imageWith(name: String, width: CGFloat, height: CGFloat, size: Int, color: UIColor) -> UIImage? {
-        let frame = CGRect(x: 0, y: 0, width: width, height: CGFloat(size))
-        let nameLabel = UILabel(frame: frame)
-        nameLabel.textAlignment = .left
-        nameLabel.backgroundColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0)
-        nameLabel.textColor = color
-        nameLabel.font = UIFont.boldSystemFont(ofSize: CGFloat(size))
-        nameLabel.text = name
-        nameLabel.numberOfLines = 0
-        nameLabel.sizeToFit()
-        UIGraphicsBeginImageContext(frame.size)
-        if let currentContext = UIGraphicsGetCurrentContext() {
-         nameLabel.layer.render(in: currentContext)
-         let nameImage = UIGraphicsGetImageFromCurrentImageContext()
-         return nameImage
-       }
-       return nil
-     }
-   }
+        assetExport.exportAsynchronously{
+            switch assetExport.status{
+            case .completed:
+                print("Movie complete")
+                result(nil)
+            case  .failed:
+                print("failed \(String(describing: assetExport.error))")
+            case .cancelled:
+                print("cancelled \(String(describing: assetExport.error))")
+            default:
+                print("cancelled \(String(describing: assetExport.error))")
+                break
+            }
+        }
+    }
+}
 
    extension UIColor {
     convenience init(hex: String, alpha: CGFloat = 1.0) {

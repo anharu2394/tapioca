@@ -1,6 +1,3 @@
-## 1.0.5
-* Migrate to null-safety
-
 ## 1.0.4
 * Resolve #19(Use CIFilter without AVVideoCompositionCoreAnimationTool)
 

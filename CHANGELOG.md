@@ -1,3 +1,6 @@
+## 1.0.5+
+* Migrate to null-safety completely
+
 ## 1.0.5
 * Migrate to null-safety
 

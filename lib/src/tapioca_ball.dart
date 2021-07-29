@@ -38,7 +38,7 @@ enum Filters {
 }
 
 class _Filter extends TapiocaBall {
- late String color;
+ String color;
  _Filter(Filters type) {
    switch (type) {
      case Filters.pink:

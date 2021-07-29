@@ -11,7 +11,7 @@ void main() {
   final List<MethodCall> log = <MethodCall>[];
   final fileName = 'sample.mp4';
   Directory tempDirectory;
-  late String path;
+  String path;
 
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -47,7 +47,7 @@ void main() {
       TapiocaBall.imageOverlay(Uint8List(10), 10, 10),
     ];
     final cup = Cup(Content(path), tapiocaBalls);
-    cup.suckUp(path);
+    cup.suckUp();
     expect(log, <Matcher>[
       isMethodCall(
         'writeVideofile',

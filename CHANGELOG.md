@@ -1,4 +1,4 @@
-## 1.0.5+
+## 1.0.5+1
 * Migrate to null-safety completely
 
 ## 1.0.5

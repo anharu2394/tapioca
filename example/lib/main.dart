@@ -49,10 +49,8 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Center(
-            child: isLoading ? CircularProgressIndicator() : RaisedButton(
+            child: isLoading ? CircularProgressIndicator() : ElevatedButton(
           child: Text("Pick a video and Edit it"),
-          color: Colors.orange,
-          textColor: Colors.white,
           onPressed: () async {
             print("clicked!");
             await _pickVideo();

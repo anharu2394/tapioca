@@ -17,7 +17,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final navigatorKey = GlobalKey<NavigatorState>();
-  PickedFile _video;
+  late XFile _video;
   bool isLoading = false;
 
   @override
@@ -29,12 +29,13 @@ class _MyAppState extends State<MyApp> {
 
     try {
       final ImagePicker _picker = ImagePicker();
-      PickedFile video = await _picker.getVideo(source: ImageSource.gallery);
-      print(video.path);
+      XFile? video = await _picker.pickVideo(source: ImageSource.gallery);
+      if (video != null) {
       setState(() {
-        _video = video;
-        isLoading = true;
+      _video = video;
+      isLoading = true;
       });
+      }
     } catch (error) {
       print(error);
     }
@@ -68,24 +69,25 @@ class _MyAppState extends State<MyApp> {
                 TapiocaBall.textOverlay(
                     "text", 100, 10, 100, Color(0xffffc0cb)),
               ];
-              if (_video != null) {
                 final cup = Cup(Content(_video.path), tapiocaBalls);
                 cup.suckUp(path).then((_) async {
                   print("finished");
                   print(path);
-                  GallerySaver.saveVideo(path).then((bool success) {
+                  GallerySaver.saveVideo(path).then((bool? success) {
                     print(success.toString());
                   });
-                  navigatorKey.currentState.push(
-                    MaterialPageRoute(builder: (context) => VideoScreen(path)),
-                  );
+                  final currentState = navigatorKey.currentState;
+                  if (currentState != null) {
+                    currentState.push(
+                      MaterialPageRoute(builder: (context) =>
+                          VideoScreen(path)),
+                    );
+                  }
+
                   setState(() {
                     isLoading = false;
                   });
                 });
-              } else {
-                print("video is null");
-              }
             } on PlatformException {
               print("error!!!!");
             }
@@ -110,7 +112,7 @@ class _VideoAppState extends State<VideoScreen> {
 
   _VideoAppState(this.path);
 
-  VideoPlayerController _controller;
+  late VideoPlayerController _controller;
 
   @override
   void initState() {

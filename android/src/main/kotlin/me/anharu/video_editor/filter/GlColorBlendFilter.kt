@@ -5,8 +5,7 @@ import android.opengl.GLES20
 import me.anharu.video_editor.Filter
 import android.graphics.Color
 
-class GlColorBlendFilter(filter: Filter) : GlFilter(GlFilter.DEFAULT_VERTEX_SHADER,this.CONTRAST_FRAGMENT_SHADER) {
-    private val filter: Filter = filter
+class GlColorBlendFilter(private val filter: Filter) : GlFilter(GlFilter.DEFAULT_VERTEX_SHADER,this.CONTRAST_FRAGMENT_SHADER) {
     companion object {
         const val CONTRAST_FRAGMENT_SHADER =
         """

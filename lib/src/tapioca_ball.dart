@@ -23,6 +23,15 @@ abstract class TapiocaBall {
     return _ImageOverlay(bitmap, x, y);
   }
 
+  static TapiocaBall muteVideo(bool isMuted) {
+    return _MuteVideo(isMuted);
+  }
+
+  static TapiocaBall trimVideo(int startMs, int endMs) {
+    return _TrimVideo(startMs, endMs);
+  }
+
+
   /// Returns a [Map<String, dynamic>] representation of this object.
   Map<String, dynamic> toMap();
 
@@ -94,4 +103,38 @@ class _ImageOverlay extends TapiocaBall {
   String toTypeName() {
     return 'ImageOverlay';
   }
+}
+
+class _MuteVideo extends TapiocaBall{
+  final bool muteVideo;
+
+  _MuteVideo(this.muteVideo);
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {"mute": muteVideo};
+  }
+
+  @override
+  String toTypeName() {
+    return "Mute";
+  }
+
+}
+
+class _TrimVideo extends TapiocaBall{
+  final int startMs, endMs;
+
+  _TrimVideo(this.startMs, this.endMs);
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {"startMs": startMs, "endMs": endMs};
+  }
+
+  @override
+  String toTypeName() {
+    return "TrimVideo";
+  }
+
 }

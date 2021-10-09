@@ -24,7 +24,7 @@ import io.flutter.plugin.common.PluginRegistry
 
 
 /** VideoEditorPlugin */
-public class VideoEditorPlugin : FlutterPlugin, MethodCallHandler, PluginRegistry.RequestPermissionsResultListener, ActivityAware {
+class VideoEditorPlugin : FlutterPlugin, MethodCallHandler, PluginRegistry.RequestPermissionsResultListener, ActivityAware {
     var activity: Activity? = null
     private var methodChannel: MethodChannel? = null
     private val myPermissionCode = 34264
@@ -33,35 +33,18 @@ public class VideoEditorPlugin : FlutterPlugin, MethodCallHandler, PluginRegistr
         onAttachedToEngine(flutterPluginBinding.binaryMessenger)
     }
 
-    fun onAttachedToEngine(messenger: BinaryMessenger) {
+    private fun onAttachedToEngine(messenger: BinaryMessenger) {
         methodChannel = MethodChannel(messenger, "video_editor")
         methodChannel?.setMethodCallHandler(this)
     }
 
-
-    // This static function is optional and equivalent to onAttachedToEngine. It supports the old
-    // pre-Flutter-1.12 Android projects. You are encouraged to continue supporting
-    // plugin registration via this function while apps migrate to use the new Android APIs
-    // post-flutter-1.12 via https://flutter.dev/go/android-project-migration.
-    //
-    // It is encouraged to share logic between onAttachedToEngine and registerWith to keep
-    // them functionally equivalent. Only one of onAttachedToEngine or registerWith will be called
-    // depending on the user's project. onAttachedToEngine or registerWith must both be defined
-    // in the same class.
-    companion object {
-        @JvmStatic
-        fun registerWith(registrar: Registrar) {
-            val instance = VideoEditorPlugin()
-            instance.onAttachedToEngine(registrar.messenger())
-        }
-    }
 
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
         if (call.method == "getPlatformVersion") {
             result.success("Android ${android.os.Build.VERSION.RELEASE}")
         } else if (call.method == "writeVideofile") {
 
-            var getActivity = activity ?: return
+            val getActivity = activity ?: return
             checkPermission(getActivity)
 
             val srcFilePath: String = call.argument("srcFilePath") ?: run {
@@ -77,6 +60,8 @@ public class VideoEditorPlugin : FlutterPlugin, MethodCallHandler, PluginRegistr
                         result.error("processing_data_not_found", "the processing is not found.", null)
                         return
                     }
+
+            //Mp4 composer yaratırken source ve destination burada veriyoruz.
             val generator = VideoGeneratorService(Mp4Composer(srcFilePath, destFilePath))
             generator.writeVideofile(processing, result, getActivity)
         } else {

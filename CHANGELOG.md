@@ -1,3 +1,6 @@
+## 1.0.5+2
+* Update README.md and FUNDING.yml
+
 ## 1.0.5+1
 * Migrate to null-safety completely
 

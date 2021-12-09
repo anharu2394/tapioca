@@ -105,5 +105,5 @@ You can edit the video by executing `.suckUp()`.
 
 ## Support
 
-You can also support me by becoming a patron:
-https://anharu.fanbox.cc
+You can also support me:
+https://tippin.me/@_anharu

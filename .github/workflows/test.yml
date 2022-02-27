@@ -4,21 +4,19 @@ on: [push, pull_request, workflow_dispatch]
 
 jobs:
   build:
-  
-  runs-on: ubuntu-latest
-	  
-  steps:
-  - uses: actions/checkout@v1
-  - uses: takuyaohashi/setup-flutter@v1
-	with:
-		flutter-version: 'latest'
-  - name: install dependencies
-	run: flutter pub get
-  - name: analyze
-	run: flutter analyze
-  - name: test
-	run: flutter test --coverage
-  - name: upload coverage
-	uses: codecov/codecov-action@v1
-	with:
-		token: ${{ secrets.CODECOV_TOKEN }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: takuyaohashi/setup-flutter@v1
+        with:
+          flutter-version: "latest"
+      - name: install dependencies
+        run: flutter pub get
+      - name: analyze
+        run: flutter analyze
+      - name: test
+        run: flutter test --coverage
+      - name: upload coverage
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}

@@ -1,5 +1,6 @@
 # Tapioca - a Flutter plugin for video editing
 
+[![codecov](https://codecov.io/gh/anharu2394/tapioca/branch/master/graph/badge.svg)](https://codecov.io/gh/anharu2394/tapioca)
 Tapioca is a Flutter plugin for video editing on Android and iOS.
 
 *Note:* Feedback welcome and Pull Requests are most welcome!

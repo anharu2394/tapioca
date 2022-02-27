@@ -4,6 +4,7 @@
 [![Discord](https://img.shields.io/discord/947061556045283348?color=%235865F2&label=chat&logo=discord&logoColor=white)]()
 [![tippin.me](https://badgen.net/badge/%E2%9A%A1%EF%B8%8Ftippin.me/@_anharu/F0918E)](https://tippin.me/@_anharu)
 
+[![codecov](https://codecov.io/gh/anharu2394/tapioca/branch/master/graph/badge.svg)](https://codecov.io/gh/anharu2394/tapioca)
 Tapioca is a Flutter plugin for video editing on Android and iOS.
 
 *Note:* Feedback welcome and Pull Requests are most welcome!

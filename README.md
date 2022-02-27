@@ -80,11 +80,11 @@ cup.suckUp(path).then((_) {
 
 TapiocaBall is a effect to apply to the video.
 
-|TapiocaBall|Effect|
-|:-----------|:------:|
-|TapiocaBall.filter(Filters filter)|Apply color filter|
-|TapiocaBall.textOverlay(String text, int x, int y, int size, Color color)|Overlay text|
-|TapiocaBall.imageOverlay(Uint8List bitmap, int x, int y)|Overlay images|
+| TapiocaBall                                                               |       Effect       |
+| :------------------------------------------------------------------------ | :----------------: |
+| TapiocaBall.filter(Filters filter)                                        | Apply color filter |
+| TapiocaBall.textOverlay(String text, int x, int y, int size, Color color) |    Overlay text    |
+| TapiocaBall.imageOverlay(Uint8List bitmap, int x, int y)                  |   Overlay images   |
 
 ## Content
 
@@ -108,6 +108,17 @@ You can edit the video by executing `.suckUp()`.
 
 - [“Tapioca”, the flutter package to edit videos easily and not using FFmpeg](https://medium.com/@anharu/tapioca-the-flutter-package-to-edit-videos-easily-and-not-using-ffmpeg-2e1a85824796)
 
+## Contributing
+Contributions are welcomed!
+
+- Report bugs and scenarios that are difficult to implement
+- Report parts of the documentation that are unclear
+- Update the documentation / add examples
+- Implement new features by making a pull-request
+
+Please see the following guidelines when modifying the repository  
+[Contributing](CONTRIBUTING.md)
+
 ## Community
-Questions and proposals are most welcome!
+Questions and proposals are most welcome!  
 ![Discord Banner 4](https://discordapp.com/api/guilds/947061556045283348/widget.png?style=banner4)

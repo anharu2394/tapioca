@@ -1,4 +1,8 @@
 # Tapioca - a Flutter plugin for video editing
+[![Version](https://img.shields.io/pub/v/tapioca.svg)](https://pub.dev/packages/tapioca)
+[![Generic badge](https://img.shields.io/badge/platform-android%20|%20ios%20|%20web%20-blue.svg)](https://pub.dev/packages/tapioca)
+[![Discord](https://img.shields.io/discord/947061556045283348?color=%235865F2&label=chat&logo=discord&logoColor=white)]()
+[![tippin.me](https://badgen.net/badge/%E2%9A%A1%EF%B8%8Ftippin.me/@_anharu/F0918E)](https://tippin.me/@_anharu)
 
 Tapioca is a Flutter plugin for video editing on Android and iOS.
 
@@ -103,7 +107,6 @@ You can edit the video by executing `.suckUp()`.
 
 - [“Tapioca”, the flutter package to edit videos easily and not using FFmpeg](https://medium.com/@anharu/tapioca-the-flutter-package-to-edit-videos-easily-and-not-using-ffmpeg-2e1a85824796)
 
-## Support
-
-You can also support me:
-https://tippin.me/@_anharu
+## Community
+Questions and proposals are most welcome!
+![Discord Banner 4](https://discordapp.com/api/guilds/947061556045283348/widget.png?style=banner4)

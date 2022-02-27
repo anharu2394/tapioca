@@ -18,8 +18,13 @@ class GlTextOverlayFilter(textOverlay: TextOverlay) : GlOverlayFilter() {
     }
     private fun textAsBitmap(text: String, textSize: Float, color: String): Bitmap {
         val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        //TODO : Use specified font - via. Typeface
+        //TODO : Support Text Bold, Italic & Bold Italic - via. Typeface
         paint.textSize = textSize
         paint.color = Color.parseColor(color)
+        //TODO : Support Center & Right Aligns
+        //TODO : Support text will be out of video boundaries check
+        //TODO : Support fallback align if text will be out of video boundaries
         paint.textAlign = Paint.Align.LEFT
         val baseline = -paint.ascent() // ascent() is negative
         val width = (paint.measureText(text) + 0.5f).toInt() // round

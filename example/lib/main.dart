@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
+
+import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:tapioca/src/video_editor.dart';
 import 'package:tapioca/tapioca.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -18,48 +18,52 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
   final navigatorKey = GlobalKey<NavigatorState>();
-  File _video;
+  late XFile _video;
   bool isLoading = false;
-  static const EventChannel _eventChannel =
+  static const EventChannel _channel =
       const EventChannel('video_editor_progress');
-  double progress = 0;
+  late StreamSubscription _streamSubscription;
+  int processPercentage = 0;
 
   @override
   void initState() {
     super.initState();
-    initPlatformState();
+    _enableEventReceiver();
   }
 
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      platformVersion = await VideoEditor.platformVersion;
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _platformVersion = platformVersion;
-    });
+  @override
+  void dispose() {
+    super.dispose();
+    _disableEventReceiver();
   }
 
+  void _enableEventReceiver() {
+    _streamSubscription = _channel.receiveBroadcastStream().listen(
+            (dynamic event) {
+          setState((){
+            processPercentage = (event.toDouble()*100).round();
+          });
+        },
+        onError: (dynamic error) {
+          print('Received error: ${error.message}');
+        },
+        cancelOnError: true);
+  }
+
+  void _disableEventReceiver() {
+      _streamSubscription.cancel();
+  }
   _pickVideo() async {
     try {
-      File video = await ImagePicker.pickVideo(source: ImageSource.gallery);
-      print(video.path);
+      final ImagePicker _picker = ImagePicker();
+      XFile? video = await _picker.pickVideo(source: ImageSource.gallery);
+      if (video != null) {
       setState(() {
-        _video = video;
-        isLoading = true;
+      _video = video;
+      isLoading = true;
       });
+      }
     } catch (error) {
       print(error);
     }
@@ -73,15 +77,19 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
-        body: Center(child: isLoading ? CircularProgressIndicator() : RaisedButton(
+        body: Center(
+            child: isLoading ? Column(mainAxisSize: MainAxisSize.min,children:[
+
+              CircularProgressIndicator(),
+              SizedBox(height: 10),
+              Text(processPercentage.toString() + "%", style: TextStyle(fontSize: 20),),
+            ] ) : ElevatedButton(
           child: Text("Pick a video and Edit it"),
-          color: Colors.orange,
-          textColor: Colors.white,
           onPressed: () async {
             print("clicked!");
             await _pickVideo();
             var tempDir = await getTemporaryDirectory();
-            final path = '${tempDir.path}/result.mp4';
+            final path = '${tempDir.path}/${DateTime.now().millisecondsSinceEpoch}result.mp4';
             print(tempDir);
             final imageBitmap =
                 (await rootBundle.load("assets/tapioca_drink.png"))
@@ -94,23 +102,31 @@ class _MyAppState extends State<MyApp> {
                 TapiocaBall.textOverlay(
                     "text", 100, 10, 100, Color(0xffffc0cb)),
               ];
-              if (_video != null) {
+              print("will start");
                 final cup = Cup(Content(_video.path), tapiocaBalls);
                 cup.suckUp(path).then((_) async {
                   print("finished");
-                  GallerySaver.saveVideo(path).then((bool success) {
+                  setState(() {
+                    processPercentage = 0;
+                  });
+                  print(path);
+                  GallerySaver.saveVideo(path).then((bool? success) {
                     print(success.toString());
                   });
-                  navigatorKey.currentState.push(
-                    MaterialPageRoute(builder: (context) => VideoScreen(path)),
-                  );
+                  final currentState = navigatorKey.currentState;
+                  if (currentState != null) {
+                    currentState.push(
+                      MaterialPageRoute(builder: (context) =>
+                          VideoScreen(path)),
+                    );
+                  }
+
                   setState(() {
                     isLoading = false;
                   });
+                }).catchError((e) {
+                  print('Got error: $e');
                 });
-              } else {
-                print("video is null");
-              }
             } on PlatformException {
               print("error!!!!");
             }
@@ -135,7 +151,8 @@ class _VideoAppState extends State<VideoScreen> {
 
   _VideoAppState(this.path);
 
-  VideoPlayerController _controller;
+  late VideoPlayerController _controller;
+
 
   @override
   void initState() {
@@ -152,7 +169,7 @@ class _VideoAppState extends State<VideoScreen> {
     return Scaffold(
        appBar: AppBar(),
       body: Center(
-        child: _controller.value.initialized
+        child: _controller.value.isInitialized
             ? AspectRatio(
                 aspectRatio: _controller.value.aspectRatio,
                 child: VideoPlayer(_controller),
@@ -163,7 +180,7 @@ class _VideoAppState extends State<VideoScreen> {
         onPressed: () {
           setState(() {
             if (!_controller.value.isPlaying &&
-                _controller.value.initialized &&
+                _controller.value.isInitialized &&
                 (_controller.value.duration == _controller.value.position)) {
               _controller.initialize();
               _controller.play();

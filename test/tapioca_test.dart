@@ -47,7 +47,7 @@ void main() {
       TapiocaBall.imageOverlay(Uint8List(10), 10, 10),
     ];
     final cup = Cup(Content(path), tapiocaBalls);
-    cup.suckUp('${tempDirectory.path}/result.mp4');
+    cup.suckUp(path);
     expect(log, <Matcher>[
       isMethodCall(
         'writeVideofile',

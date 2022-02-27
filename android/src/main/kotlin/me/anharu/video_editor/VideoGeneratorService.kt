@@ -28,7 +28,7 @@ class VideoGeneratorService(
         private val composer: Mp4Composer
 ) : VideoGeneratorServiceInterface {
     override fun writeVideofile(processing: HashMap<String,HashMap<String,Any>>, result: Result, activity: Activity, eventSink: EventChannel.EventSink ) {
-        val filters: MutableList<GlFilter> = mutableListOf()
+                 val filters: MutableList<GlFilter> = mutableListOf()
         try {
             processing.forEach { (k, v) ->
                 when (k) {

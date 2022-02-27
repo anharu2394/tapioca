@@ -52,9 +52,10 @@ void main() {
       isMethodCall(
         'writeVideofile',
         arguments: <String, dynamic>{
-          'name': path,
+          'srcFilePath': path,
+          'destFilePath': path,
           'processing': <String, Map<String, dynamic>>{
-            'Filter': {'type': 0 },
+            'Filter': {'type': '#ffc0cb' },
             'TextOverlay': {'text': 'text', 'x': 10, 'y': 10, 'size': 100, 'color': '#ffffff'},
             'ImageOverlay': { 'bitmap': Uint8List(10),'x': 10, 'y': 10,},
           },

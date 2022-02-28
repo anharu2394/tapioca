@@ -1,7 +1,7 @@
 # Tapioca - a Flutter plugin for video editing
 [![Version](https://img.shields.io/pub/v/tapioca.svg)](https://pub.dev/packages/tapioca)
 [![Generic badge](https://img.shields.io/badge/platform-android%20|%20ios%20|%20web%20-blue.svg)](https://pub.dev/packages/tapioca)
-[![Discord](https://img.shields.io/discord/947061556045283348?color=%235865F2&label=chat&logo=discord&logoColor=white)]()
+[![Discord](https://img.shields.io/discord/947061556045283348?color=%235865F2&label=chat&logo=discord&logoColor=white)](https://discord.gg/3Be9nP5cjb)
 [![tippin.me](https://badgen.net/badge/%E2%9A%A1%EF%B8%8Ftippin.me/@_anharu/F0918E)](https://tippin.me/@_anharu)
 
 [![codecov](https://codecov.io/gh/anharu2394/tapioca/branch/master/graph/badge.svg)](https://codecov.io/gh/anharu2394/tapioca)
@@ -121,4 +121,4 @@ Please see the following guidelines when modifying the repository
 
 ## Community
 Questions and proposals are most welcome!  
-![Discord Banner 4](https://discordapp.com/api/guilds/947061556045283348/widget.png?style=banner4)
+[![Discord Banner 4](https://discordapp.com/api/guilds/947061556045283348/widget.png?style=banner4)](https://discord.gg/3Be9nP5cjb)

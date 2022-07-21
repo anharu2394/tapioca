@@ -102,8 +102,8 @@ public class VideoEditorPlugin : FlutterPlugin, MethodCallHandler, PluginRegistr
         onDetachedFromActivity()
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>?,
-                                            grantResults: IntArray?): Boolean {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
+                                            grantResults: IntArray): Boolean {
         when (requestCode) {
             myPermissionCode -> {
                 // Only return true if handling the requestCode

@@ -1,5 +1,10 @@
 # Tapioca - a Flutter plugin for video editing
+[![Version](https://img.shields.io/pub/v/tapioca.svg)](https://pub.dev/packages/tapioca)
+[![Generic badge](https://img.shields.io/badge/platform-android%20|%20ios%20|%20web%20-blue.svg)](https://pub.dev/packages/tapioca)
+[![Discord](https://img.shields.io/discord/947061556045283348?color=%235865F2&label=chat&logo=discord&logoColor=white)](https://discord.gg/3Be9nP5cjb)
+[![tippin.me](https://badgen.net/badge/%E2%9A%A1%EF%B8%8Ftippin.me/@_anharu/F0918E)](https://tippin.me/@_anharu)
 
+[![codecov](https://codecov.io/gh/anharu2394/tapioca/branch/master/graph/badge.svg)](https://codecov.io/gh/anharu2394/tapioca)
 Tapioca is a Flutter plugin for video editing on Android and iOS.
 
 *Note:* Feedback welcome and Pull Requests are most welcome!
@@ -75,11 +80,11 @@ cup.suckUp(path).then((_) {
 
 TapiocaBall is a effect to apply to the video.
 
-|TapiocaBall|Effect|
-|:-----------|:------:|
-|TapiocaBall.filter(Filters filter)|Apply color filter|
-|TapiocaBall.textOverlay(String text, int x, int y, int size, Color color)|Overlay text|
-|TapiocaBall.imageOverlay(Uint8List bitmap, int x, int y)|Overlay images|
+| TapiocaBall                                                               |       Effect       |
+| :------------------------------------------------------------------------ | :----------------: |
+| TapiocaBall.filter(Filters filter)                                        | Apply color filter |
+| TapiocaBall.textOverlay(String text, int x, int y, int size, Color color) |    Overlay text    |
+| TapiocaBall.imageOverlay(Uint8List bitmap, int x, int y)                  |   Overlay images   |
 
 ## Content
 
@@ -103,7 +108,17 @@ You can edit the video by executing `.suckUp()`.
 
 - [“Tapioca”, the flutter package to edit videos easily and not using FFmpeg](https://medium.com/@anharu/tapioca-the-flutter-package-to-edit-videos-easily-and-not-using-ffmpeg-2e1a85824796)
 
-## Support
+## Contributing
+Contributions are welcomed!
 
-You can also support me:
-https://tippin.me/@_anharu
+- Report bugs and scenarios that are difficult to implement
+- Report parts of the documentation that are unclear
+- Update the documentation / add examples
+- Implement new features by making a pull-request
+
+Please see the following guidelines when modifying the repository  
+[Contributing](CONTRIBUTING.md)
+
+## Community
+Questions and proposals are most welcome!  
+[![Discord Banner 4](https://discordapp.com/api/guilds/947061556045283348/widget.png?style=banner4)](https://discord.gg/3Be9nP5cjb)

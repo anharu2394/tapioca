@@ -10,7 +10,7 @@ void main() {
   const MethodChannel channel = MethodChannel('video_editor');
   final List<MethodCall> log = <MethodCall>[];
   final fileName = 'sample.mp4';
-  Directory tempDirectory;
+  late Directory tempDirectory;
   late String path;
 
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -42,7 +42,7 @@ void main() {
 
   test('writeVideofile', () async {
     final tapiocaBalls = [
-      TapiocaBall.filter(Filters.pink),
+      TapiocaBall.filter(Filters.pink, 1.0),
       TapiocaBall.textOverlay("text", 10, 10,100, Color(0xFFffffff)),
       TapiocaBall.imageOverlay(Uint8List(10), 10, 10),
     ];
@@ -52,10 +52,10 @@ void main() {
       isMethodCall(
         'writeVideofile',
         arguments: <String, dynamic>{
-          'srcFilePath': path,
-          'destFilePath': path,
-          'processing': <String, Map<String, dynamic>>{
-            'Filter': {'type': '#ffc0cb' },
+            'srcFilePath': path,
+            'destFilePath': path,
+            'processing': <String, Map<String, dynamic>>{
+            'Filter': {'type': '#ffc0cb', 'degree': 1.0 },
             'TextOverlay': {'text': 'text', 'x': 10, 'y': 10, 'size': 100, 'color': '#ffffff'},
             'ImageOverlay': { 'bitmap': Uint8List(10),'x': 10, 'y': 10,},
           },

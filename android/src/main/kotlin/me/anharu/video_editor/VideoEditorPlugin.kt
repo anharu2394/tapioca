@@ -5,29 +5,29 @@ import android.app.Application
 import android.app.Activity
 import android.content.pm.PackageManager
 import android.os.Environment
+import android.util.EventLog
 import androidx.annotation.NonNull
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.daasuu.mp4compose.composer.Mp4Composer
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
-import io.flutter.plugin.common.MethodCall
-import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.Registrar
 import me.anharu.video_editor.VideoGeneratorService
 import java.io.File
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
-import io.flutter.plugin.common.BinaryMessenger
-import io.flutter.plugin.common.PluginRegistry
+import io.flutter.plugin.common.*
 
 
 /** VideoEditorPlugin */
 public class VideoEditorPlugin : FlutterPlugin, MethodCallHandler, PluginRegistry.RequestPermissionsResultListener, ActivityAware {
     var activity: Activity? = null
     private var methodChannel: MethodChannel? = null
+    private var eventChannel: EventChannel? = null
     private val myPermissionCode = 34264
+    private var eventSink : EventChannel.EventSink? = null
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         onAttachedToEngine(flutterPluginBinding.binaryMessenger)
@@ -35,7 +35,17 @@ public class VideoEditorPlugin : FlutterPlugin, MethodCallHandler, PluginRegistr
 
     fun onAttachedToEngine(messenger: BinaryMessenger) {
         methodChannel = MethodChannel(messenger, "video_editor")
+        eventChannel = EventChannel(messenger, "video_editor_progress")
         methodChannel?.setMethodCallHandler(this)
+        eventChannel?.setStreamHandler(object : EventChannel.StreamHandler {
+            override fun onListen(arguments: Any?, events: EventChannel.EventSink) {
+                eventSink = events
+
+            }
+            override fun onCancel(arguments: Any?) {
+                println("Event Channel is canceled.")
+            }
+        })
     }
 
 
@@ -62,6 +72,7 @@ public class VideoEditorPlugin : FlutterPlugin, MethodCallHandler, PluginRegistr
         } else if (call.method == "writeVideofile") {
 
             var getActivity = activity ?: return
+            var newEventSink = eventSink ?: return
             checkPermission(getActivity)
 
             val srcFilePath: String = call.argument("srcFilePath") ?: run {
@@ -78,7 +89,7 @@ public class VideoEditorPlugin : FlutterPlugin, MethodCallHandler, PluginRegistr
                         return
                     }
             val generator = VideoGeneratorService(Mp4Composer(srcFilePath, destFilePath))
-            generator.writeVideofile(processing, result, getActivity)
+            generator.writeVideofile(processing, result, getActivity,newEventSink)
         } else {
             result.notImplemented()
         }

@@ -1,3 +1,6 @@
+## 1.0.6+1
+* FIX: 'onRequestPermissionsResult' overrides nothing ( #70 )
+
 ## 1.0.6
 * Get the percentage of processing
 

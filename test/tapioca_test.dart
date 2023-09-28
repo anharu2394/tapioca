@@ -1,6 +1,4 @@
 import 'dart:io';
-import 'dart:ui';
-import 'dart:typed_data';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tapioca/src/video_editor.dart';
